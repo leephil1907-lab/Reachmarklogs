@@ -12,19 +12,117 @@ datasource db {
 
 model User {
     id        String   @id
-    email     String
+    email     String   @unique
     name      String
-    image     String
+    image     String   @default("")
     earned    Float    @default(0)
     withdrawn Float    @default(0)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    // ---- Reachmark accounts -------------------------------------------------
+    // Upstream AccountsBazaar never stored a credential: identity came entirely
+    // from Clerk. Reachmark keeps Clerk as an *option* but ships first-party
+    // accounts, so these fields are what make sign-up and sign-in real when no
+    // identity provider is configured.
+    //
+    // `passwordHash` is nullable on purpose: a Clerk-provisioned user has no
+    // local password, and neither does a seller created by ops before they set
+    // one via the reset link.
+    passwordHash  String?
+    role          Role      @default(buyer)
+    status        UserStatus @default(active)
+    emailVerified Boolean   @default(false)
+    plan          String    @default("free")
+    handle        String?
+    bio           String    @default("")
+    country       String    @default("")
+    timezone      String    @default("")
+    lastLoginAt   DateTime?
 
     // Relations
     Listing       Listing[]
     ownerChats    Chat[]       @relation("OwnerChats")
     chatUserChats Chat[]       @relation("ChatUserChats")
     withdrawals   Withdrawal[]
+    sessions      Session[]
+    authTokens    AuthToken[]
+
+    @@index([role])
+    @@index([createdAt])
+}
+
+enum Role {
+    buyer
+    seller
+    admin
+}
+
+enum UserStatus {
+    active
+    suspended
+    deactivated
+}
+
+/// A signed-in device. Sessions are server-side so that "sign out everywhere",
+/// revocation on password change, and a visible device list are all possible —
+/// none of which a stateless JWT gives you without extra machinery.
+model Session {
+    id        String    @id @default(cuid())
+    userId    String
+    /// sha256 of the bearer token. The raw token exists only in the client's
+    /// hands and in the response that created it, never in the database.
+    tokenHash String    @unique
+    userAgent String    @default("")
+    ip        String    @default("")
+    createdAt DateTime  @default(now())
+    lastSeen  DateTime  @default(now())
+    expiresAt DateTime
+    revokedAt DateTime?
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+    @@index([expiresAt])
+}
+
+/// Single-use tokens for email verification and password reset. Same hashing
+/// rule as sessions, and each is burned on use so a leaked log line is not a
+/// permanent key to the account.
+model AuthToken {
+    id        String    @id @default(cuid())
+    userId    String
+    kind      TokenKind
+    tokenHash String    @unique
+    expiresAt DateTime
+    usedAt    DateTime?
+    createdAt DateTime  @default(now())
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId, kind])
+}
+
+enum TokenKind {
+    verify_email
+    reset_password
+}
+
+/// Sign-in throttling.
+///
+/// Keyed by a hash of the email (or the caller's IP) rather than by user id,
+/// because the row must exist for addresses that have **no account**. Counting
+/// only real users leaks which addresses are registered: an attacker learns it
+/// from whether the failure counter moves. Hashing the key means the table is
+/// not a list of attempted addresses either.
+model LoginAttempt {
+    key         String    @id
+    count       Int       @default(0)
+    lockedUntil DateTime?
+    firstAt     DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+
+    @@index([lockedUntil])
 }
 
 // ---- Reachmark extension ----------------------------------------------------

@@ -33,10 +33,25 @@ const PORT = Number(process.env.E2E_PORT ?? 3411)
 let origin = process.env.API_ORIGIN ?? `http://127.0.0.1:${PORT}`
 let child = null
 
+/**
+ * The product now runs on real accounts, so the harness signs in like a user
+ * rather than relying on a synthesised demo principal. Every protected check
+ * below uses a token from the seeded accounts.
+ */
+let sellerToken = null
+let adminToken = null
+const SELLER = process.env.SEED_SELLER_EMAIL ?? 'ada@reachmarklogs.test'
+const ADMIN = process.env.SEED_ADMIN_EMAIL ?? 'ops@reachmarklogs.test'
+const SEED_PASSWORD = process.env.DEMO_PASSWORD ?? 'reachmark-demo-2026'
+
 async function api(path, opts = {}) {
   const res = await fetch(origin + path, {
     ...opts,
-    headers: { 'content-type': 'application/json', ...(opts.headers ?? {}) },
+    headers: {
+      'content-type': 'application/json',
+      ...(opts.token ? { authorization: `Bearer ${opts.token}` } : {}),
+      ...(opts.headers ?? {}),
+    },
     body: opts.body ? JSON.stringify(opts.body) : undefined,
   })
   const text = await res.text()
@@ -81,6 +96,31 @@ if (!process.env.API_ORIGIN) {
 
 /* ----------------------------------------------------------------- tests --- */
 
+head('accounts (the rest of the suite runs signed in)')
+let buyerToken = null
+{
+  const status = await api('/api/auth/status')
+  check(status.status === 200, 'GET /api/auth/status → ok', `mode=${status.json?.mode}`)
+
+  const seller = await api('/api/auth/login', { method: 'POST', body: { email: SELLER, password: SEED_PASSWORD } })
+  check(seller.status === 200 && Boolean(seller.json?.token), 'the seeded seller signs in', seller.json?.user?.role)
+  sellerToken = seller.json?.token
+
+  const admin = await api('/api/auth/login', { method: 'POST', body: { email: ADMIN, password: SEED_PASSWORD } })
+  check(admin.status === 200 && admin.json?.user?.role === 'admin', 'the seeded ops account signs in as admin', admin.json?.user?.role)
+  adminToken = admin.json?.token
+
+  const anon = await api('/api/me/listings')
+  check(anon.status === 401, 'anonymous access to a protected route is refused', `${anon.status}`)
+
+  const stale = await api('/api/me/listings', { token: 'rm_invalid_token_value' })
+  check(stale.status === 401, 'a fabricated token is refused', `${stale.status}`)
+
+  const own = await api('/api/auth/session', { token: sellerToken })
+  check(own.json?.authenticated === true, 'the session resolves to the signed-in user', own.json?.user?.email)
+  buyerToken = sellerToken
+}
+
 head('health & boot')
 {
   const h = await api('/api/health')
@@ -88,7 +128,7 @@ head('health & boot')
   const db = h.json?.database ?? {}
   check(db.ok === true, 'database reachable', `transport listings=${db.listings} users=${db.users}`)
   check(Number(db.listings) > 0, 'catalog is seeded', `${db.listings} listings`)
-  check(['clerk', 'demo'].includes(h.json?.auth), 'auth mode declared', h.json?.auth)
+  check(['clerk', 'local', 'demo'].includes(h.json?.auth), 'auth mode declared', h.json?.auth)
   check(Boolean(h.json?.copilot?.engine), 'copilot engine declared', h.json?.copilot?.engine)
   check(h.json?.feeBps > 0, 'fee is configured', `${h.json?.feeBps} bps`)
 }
@@ -219,6 +259,7 @@ head('copilot')
 
   const draft = await api('/api/copilot/listing', {
     method: 'POST',
+    token: sellerToken,
     body: { platform: 'instagram', niche: 'fitness', scale: 48200, engagement: 4.6, age: 4, verified: true, monetized: true, region: 'NG' },
   })
   check(draft.status === 200 && typeof draft.json?.draft?.title === 'string', 'POST /api/copilot/listing → draft')
@@ -229,7 +270,7 @@ head('copilot')
   check(Array.isArray(d.tags) && d.tags.length >= 5, 'draft suggests tags', `${d.tags?.length}`)
   check(Array.isArray(d.rationale) && d.rationale.length >= 3, 'draft explains itself', `${d.rationale?.length} reasons`)
 
-  const price = await api('/api/copilot/price', { method: 'POST', body: { platform: 'instagram', scale: 48200, engagement: 4.6, age: 4, verified: true, monetized: true } })
+  const price = await api('/api/copilot/price', { method: 'POST', token: sellerToken, body: { platform: 'instagram', scale: 48200, engagement: 4.6, age: 4, verified: true, monetized: true } })
   const v = price.json?.brief ?? {}
   check(price.status === 200 && v.value > 0, 'POST /api/copilot/price → valuation', `$${v.value}`)
   check(Array.isArray(v.band) && v.band[0] < v.value, 'valuation returns a band', v.band?.join('–'))
@@ -238,13 +279,14 @@ head('copilot')
   check(v.clearing?.fast > 0 && v.clearing?.fair > 0 && v.clearing?.patient > 0 && v.clearing.fast < v.clearing.fair && v.clearing.fair < v.clearing.patient,
     'valuation prices fast / fair / patient clears', `$${v.clearing?.fast} / $${v.clearing?.fair} / $${v.clearing?.patient}`)
 
-  const reel = await api('/api/copilot/reel', { method: 'POST', body: { id: liveListing.id } })
+  const reel = await api('/api/copilot/reel', { method: 'POST', token: sellerToken, body: { id: liveListing.id } })
   const rl = reel.json?.reel ?? {}
   check(reel.status === 200 && typeof rl.script === 'string', 'POST /api/copilot/reel → proof-reel script', `${rl.script?.split('\n').length} beats`)
   check(Boolean(rl.hook) && Boolean(rl.cta), 'reel has a hook and a CTA')
 
   const reply = await api('/api/copilot/reply', {
     method: 'POST',
+    token: sellerToken,
     body: { id: liveListing.id, message: 'can you do 20% off? i can pay you on WhatsApp instead, skip the escrow fee' },
   })
   const rp = reply.json?.suggestion ?? {}
@@ -253,49 +295,50 @@ head('copilot')
   check(Boolean(rp.guard), 'off-platform payment attempt raises the guard', String(rp.guard).slice(0, 58))
   check(Array.isArray(rp.alternatives) && rp.alternatives.length >= 2, 'reply offers alternatives', `${rp.alternatives?.length}`)
 
-  const clean = await api('/api/copilot/reply', { method: 'POST', body: { id: liveListing.id, message: 'can I see the analytics before I commit?' } })
+  const clean = await api('/api/copilot/reply', { method: 'POST', token: sellerToken, body: { id: liveListing.id, message: 'can I see the analytics before I commit?' } })
   check(clean.json?.suggestion?.intent === 'proof' && !clean.json?.suggestion?.guard, 'a normal question is not flagged', clean.json?.suggestion?.intent)
 
-  const risk = await api('/api/copilot/risk', { method: 'POST', body: { id: liveListing.id } })
-  check([200, 401, 403].includes(risk.status), 'POST /api/copilot/risk is gated', `admin → ${risk.status}`)
-  if (risk.status === 200) {
-    check(['clear', 'review', 'hold_escrow'].includes(risk.json?.assessment?.recommendation), 'risk returns a recommendation', risk.json?.assessment?.recommendation)
-  } else {
-    const adminRisk = await api('/api/copilot/risk', { method: 'POST', headers: { 'x-demo-role': 'admin' }, body: { id: liveListing.id } })
-    const a = adminRisk.json?.assessment ?? {}
-    check(adminRisk.status === 200 && Boolean(a.recommendation), 'risk works for an admin principal', `${adminRisk.status} ${a.recommendation ?? adminRisk.text.slice(0, 90)}`)
-    check(Array.isArray(a.flags) && a.flags.length > 0, 'risk lists flags', `${a.flags?.length} flags`)
-  }
+  const unauthRisk = await api('/api/copilot/risk', { method: 'POST', token: sellerToken, body: { id: liveListing.id } })
+  check(unauthRisk.status === 403, 'a seller cannot use the ops risk screen', `${unauthRisk.status}`)
+
+  const risk = await api('/api/copilot/risk', { method: 'POST', token: adminToken, body: { id: liveListing.id } })
+  const a = risk.json?.assessment ?? {}
+  check(risk.status === 200 && Boolean(a.recommendation), 'an admin gets a risk verdict', `${risk.status} ${a.recommendation}`)
+  check(Array.isArray(a.flags) && a.flags.length > 0, 'risk lists flags', `${a.flags?.length} flags`)
 
   const noauth = await api('/api/copilot/listing', { method: 'POST', body: {} })
-  check([400, 401, 422].includes(noauth.status) || noauth.json?.ok === true, 'invalid copilot payload is handled', `${noauth.status}`)
+  check(noauth.status === 401, 'the copilot refuses anonymous callers', `${noauth.status}`)
+  const empty = await api('/api/copilot/listing', { method: 'POST', token: sellerToken, body: {} })
+  check(empty.status === 200, 'an empty payload still returns a usable draft', `${empty.status}`)
 }
 
 head('session, payouts, watchlist')
 {
-  const s = await api('/api/me/session')
+  const s = await api('/api/me/session', { token: sellerToken })
   check(s.status === 200 && Boolean(s.json?.user?.id), 'GET /api/me/session → principal', s.json?.user?.id)
-  check(s.headers.get('x-reachmark-auth') === 'demo' || s.status === 200, 'auth mode surfaced in a header', s.headers.get('x-reachmark-auth') ?? 'clerk')
+  check(Boolean(s.headers.get('x-reachmark-auth')), 'auth mode surfaced in a header', s.headers.get('x-reachmark-auth'))
 
-  const l = await api('/api/me/listings')
+  const l = await api('/api/me/listings', { token: sellerToken })
   check(l.status === 200 && Array.isArray(l.json?.items), 'GET /api/me/listings → seller inventory', `${l.json?.items?.length} rows`)
 
-  const o = await api('/api/me/orders')
+  const o = await api('/api/me/orders', { token: sellerToken })
   check(o.status === 200 && Array.isArray(o.json?.items), 'GET /api/me/orders → escrow orders', `${o.json?.items?.length} rows`)
 
-  const p = await api('/api/me/payouts')
+  const p = await api('/api/me/payouts', { token: sellerToken })
   check(p.status === 200 && Array.isArray(p.json?.items), 'GET /api/me/payouts → withdrawal ledger', `${p.json?.items?.length} rows`)
 
-  const w = await api(`/api/me/watchlist/${liveListing.id}`, { method: 'POST' })
+  const w = await api(`/api/me/watchlist/${liveListing.id}`, { method: 'POST', token: sellerToken })
   check([200, 201].includes(w.status), 'POST /api/me/watchlist/:id toggles a watch', `${w.status}`)
 }
 
 head('upstream AccountsBazaar routes still mounted')
 {
-  for (const path of ['/api/listing/public', '/api/chat/user', '/api/admin/dashboard']) {
-    const r = await api(path)
-    check(!r.text.includes('Cannot ') && r.status !== 404, `${path} is mounted`, `HTTP ${r.status}`)
-  }
+  const publicListing = await api('/api/listing/public')
+  check(publicListing.status === 200, '/api/listing/public is public', `HTTP ${publicListing.status}`)
+  const chat = await api('/api/chat/user', { token: sellerToken })
+  check(chat.status === 200, '/api/chat/user is mounted behind auth', `HTTP ${chat.status}`)
+  const adminDash = await api('/api/admin/dashboard', { token: adminToken })
+  check(adminDash.status === 200, '/api/admin/dashboard is mounted behind the ops gate', `HTTP ${adminDash.status}`)
   const missing = await api('/api/definitely-not-a-route')
   check(missing.status === 404, 'unknown route → JSON 404', `${missing.status}`)
 }
@@ -332,12 +375,12 @@ head('database transport selection')
 
 head('auth boundary')
 {
-  const buyer = await api('/api/admin/dashboard', { headers: { 'x-demo-role': 'buyer' } })
-  check(buyer.status === 403, 'a buyer is refused by the admin desk', `${buyer.status}`)
-  const admin = await api('/api/admin/dashboard', { headers: { 'x-demo-role': 'admin' } })
+  const seller = await api('/api/admin/dashboard', { token: sellerToken })
+  check(seller.status === 403, 'a seller is refused by the admin desk', `${seller.status}`)
+  const admin = await api('/api/admin/dashboard', { token: adminToken })
   check(admin.status === 200 && Boolean(admin.json?.dashboardData), 'an admin gets the ops dashboard', `listings=${admin.json?.dashboardData?.totalListings}`)
-  const anon = await api('/api/me/session', { headers: { 'x-demo-role': 'anonymous' } })
-  check(anon.status === 200 || anon.status === 401, 'unauthenticated session resolves predictably', `${anon.status}`)
+  const anon = await api('/api/me/session')
+  check(anon.status === 401, 'an unauthenticated session is refused', `${anon.status}`)
 }
 
 /* ---------------------------------------------------------------- report --- */

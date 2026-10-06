@@ -25,7 +25,12 @@
     "claw:doctor": "python3 tools/claw/claw.py doctor",
     "studio": "cd services/studio && python3 main.py",
     "studio:docs": "echo 'http://127.0.0.1:8501/docs'",
-    "merge:report": "node tools/merge-report.mjs"
+    "merge:report": "node tools/merge-report.mjs",
+    "start": "node apps/api/server.js",
+    "start:prod": "npm run build && node apps/api/server.js",
+    "test": "npm run test:api && npm run test:web",
+    "test:api": "npm --workspace apps/api run test:e2e && npm --workspace apps/api run test:auth && npm --workspace apps/api run test:copilot",
+    "test:web": "npm run smoke --workspace apps/web"
   },
   "keywords": [
     "marketplace",

@@ -23,12 +23,53 @@ export const isLive = apiMode === 'live'
 
 const PER_PAGE_MAX = 48
 
-/** Adds the auth headers the live API expects. Clerk's token wins if present. */
+/* ------------------------------------------------------------------ token -- */
+
+/**
+ * Where the session token lives.
+ *
+ * localStorage rather than an httpOnly cookie on purpose: the product is
+ * embedded in sandboxed preview iframes (`sandbox="allow-scripts"`, no
+ * `allow-same-origin`), where cookies are treated as third-party and dropped.
+ * A bearer token works in both worlds, and the server still sets an httpOnly
+ * cookie as well for normal same-origin deployments.
+ *
+ * The trade-off is real and worth stating: localStorage is readable by any XSS
+ * on this origin. The server mitigates that by never storing the raw token, by
+ * expiring sessions, and by letting a user kill any device from the account
+ * page. Cookie-only mode is a one-line switch (`VITE_AUTH_STORAGE=cookie`).
+ */
+const STORAGE_KEY = 'reachmark.session'
+const useCookieOnly = (import.meta.env?.VITE_AUTH_STORAGE ?? 'local') === 'cookie'
+
+export const sessionToken = {
+  get() {
+    if (useCookieOnly || typeof localStorage === 'undefined') return null
+    try { return localStorage.getItem(STORAGE_KEY) } catch { return null }
+  },
+  set(token) {
+    if (useCookieOnly || typeof localStorage === 'undefined' || !token) return
+    try { localStorage.setItem(STORAGE_KEY, token) } catch { /* private mode */ }
+  },
+  clear() {
+    if (typeof localStorage === 'undefined') return
+    try { localStorage.removeItem(STORAGE_KEY) } catch { /* ignore */ }
+  },
+}
+
+/** Clerk supplies its own token when configured; otherwise ours is used. */
 let tokenProvider = null
 export const setTokenProvider = (fn) => { tokenProvider = fn }
+const authToken = async () => {
+  if (typeof tokenProvider === 'function') {
+    const external = await tokenProvider()
+    if (external) return external
+  }
+  return sessionToken.get()
+}
 
 async function request(path, { method = 'GET', body, headers = {} } = {}) {
-  const token = typeof tokenProvider === 'function' ? await tokenProvider().catch(() => null) : null
+  const token = await authToken()
   const res = await fetch(`${BASE}${path}`, {
     method,
     headers: {
@@ -39,9 +80,19 @@ async function request(path, { method = 'GET', body, headers = {} } = {}) {
     body: body ? JSON.stringify(body) : undefined,
   })
   const payload = await res.json().catch(() => ({}))
-  if (!res.ok) throw Object.assign(new Error(payload?.message ?? `${path} → ${res.status}`), { status: res.status, payload })
+  if (!res.ok) {
+    throw Object.assign(new Error(payload?.message ?? `${path} → ${res.status}`), {
+      status: res.status,
+      code: payload?.code,
+      problems: payload?.problems,
+      attemptsLeft: payload?.attemptsLeft,
+      payload,
+    })
+  }
   return payload
 }
+
+export { request }
 
 /* ---------------------------------------------------------------- catalog -- */
 
@@ -188,7 +239,63 @@ export const copilot = {
   engineLabel: isLive ? 'server' : 'browser',
 }
 
+/* ------------------------------------------------------------------ auth --- */
+
+/** The persona local mode presents. Shaped exactly like a real API user. */
+const guestPersona = {
+  id: 'local_guest', email: 'ada@reachmarklogs.test', name: 'Ada Okonjo', image: '',
+  role: 'seller', status: 'active', plan: 'pro', handle: 'ada', bio: '', country: 'Nigeria',
+  timezone: 'Africa/Lagos', emailVerified: true, earned: 74210.25, withdrawn: 55789.75,
+  createdAt: '2024-03-18T00:00:00.000Z', lastLoginAt: null,
+}
+
+const liveAuth = {
+  status: () => request('/api/auth/status'),
+  session: () => request('/api/auth/session'),
+  signup: (body) => request('/api/auth/signup', { method: 'POST', body }),
+  login: (body) => request('/api/auth/login', { method: 'POST', body }),
+  logout: () => request('/api/auth/logout', { method: 'POST' }),
+  verifyEmail: (token) => request('/api/auth/verify-email', { method: 'POST', body: { token } }),
+  resendVerification: () => request('/api/auth/resend-verification', { method: 'POST' }),
+  forgotPassword: (email) => request('/api/auth/forgot-password', { method: 'POST', body: { email } }),
+  resetPassword: (token, password) => request('/api/auth/reset-password', { method: 'POST', body: { token, password } }),
+  changePassword: (currentPassword, password) => request('/api/auth/change-password', { method: 'POST', body: { currentPassword, password } }),
+  updateProfile: (patch) => request('/api/auth/profile', { method: 'PATCH', body: patch }),
+  reactivate: (email, password) => request('/api/auth/reactivate', { method: 'POST', body: { email, password } }),
+  deactivate: () => request('/api/auth/deactivate', { method: 'POST' }),
+  sessions: () => request('/api/auth/sessions'),
+  revokeSession: (id) => request(`/api/auth/sessions/${encodeURIComponent(id)}`, { method: 'DELETE' }),
+  revokeOthers: () => request('/api/auth/sessions/revoke-others', { method: 'POST' }),
+}
+
+/**
+ * Local mode has no server, so there is no real account to create — but the
+ * same interface still has to answer, and it must never *pretend* a password was
+ * checked. It returns the seeded persona and flags `demo: true`, which the UI
+ * surfaces honestly.
+ */
+const localAuth = {
+  status: async () => ({ ok: true, mode: 'demo', provider: 'local-fixtures', signupAvailable: false, mailer: 'none', stats: {} }),
+  session: async () => ({ ok: true, authenticated: true, user: guestPersona, mode: 'demo' }),
+  signup: async () => ({ ok: true, demo: true, user: guestPersona, token: null }),
+  login: async () => ({ ok: true, demo: true, user: guestPersona, token: null }),
+  logout: async () => ({ ok: true }),
+  verifyEmail: async () => ({ ok: true, demo: true }),
+  resendVerification: async () => ({ ok: true, demo: true }),
+  forgotPassword: async () => ({ ok: true, demo: true, message: 'Local mode has no mail server — switch to live mode for real resets.' }),
+  resetPassword: async () => ({ ok: true, demo: true }),
+  changePassword: async () => ({ ok: true, demo: true }),
+  updateProfile: async (patch) => ({ ok: true, demo: true, user: { ...guestPersona, ...patch } }),
+  reactivate: async () => ({ ok: true, demo: true }),
+  deactivate: async () => ({ ok: true, demo: true }),
+  sessions: async () => ({ ok: true, items: [] }),
+  revokeSession: async () => ({ ok: true }),
+  revokeOthers: async () => ({ ok: true }),
+}
+
 /* ------------------------------------------------------------------- me ---- */
+
+export const auth = isLive ? liveAuth : localAuth
 
 export const me = {
   session: () => (isLive ? request('/api/me/session') : Promise.resolve({ ok: true, user: { id: 'demo_user_seller', name: 'Ada Reach', role: 'seller', plan: 'pro' }, mode: 'local' })),
@@ -202,4 +309,4 @@ export const health = () => (isLive ? request('/api/health') : Promise.resolve({
   auth: 'demo', copilot: { engine: 'local', configured: false }, feeBps: 750, escrowDefaultDays: 7,
 }))
 
-export default { catalog, copilot, me, health, apiMode, isLive, setTokenProvider }
+export default { catalog, copilot, auth, me, health, apiMode, isLive, setTokenProvider, sessionToken }

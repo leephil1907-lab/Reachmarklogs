@@ -26,7 +26,7 @@ const transporter = configured
     })
   : null
 
-const sendEmail = async ({ to, subject, html, text, replyTo }) => {
+export const sendEmail = async ({ to, subject, html, text, replyTo }) => {
   if (!to) throw new Error('sendEmail: `to` is required')
 
   if (!transporter) {

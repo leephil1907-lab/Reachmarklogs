@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "Reachmark Logs API — Express + Prisma service merged from AccountsBazaar (listings, chat, escrow, admin, credential verification) with live Neon + Clerk wiring and the LLM listing copilot.",
+  "description": "Reachmark Logs API \u2014 Express + Prisma service merged from AccountsBazaar (listings, chat, escrow, admin, credential verification) with live Neon + Clerk wiring and the LLM listing copilot.",
   "main": "server.js",
   "scripts": {
     "dev": "node --watch server.js",
@@ -18,7 +18,8 @@
     "db:sql": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script",
     "pg:local": "node scripts/dev-postgres.mjs",
     "test:e2e": "node scripts/e2e.mjs",
-    "test:copilot": "node scripts/copilot-test.mjs"
+    "test:copilot": "node scripts/copilot-test.mjs",
+    "test:auth": "node scripts/auth-test.mjs"
   },
   "dependencies": {
     "@clerk/express": "^2.1.76",

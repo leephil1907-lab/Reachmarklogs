@@ -1,6 +1,8 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { bootstrapSession } from './app/features/authSlice'
+import { RequireAdmin, RequireAuth, RequireSeller } from './components/auth/Gates'
 import { Navbar, Footer, CommandPalette, PageTransition } from './components/layout/Chrome'
 import { AuroraBackdrop, CursorGlow, ScrollProgress } from './components/layout/Ambience'
 import { Skeleton } from './components/ui'
@@ -20,6 +22,7 @@ const Trust = lazy(() => import('./pages/Trust'))
 const Academy = lazy(() => import('./pages/Academy'))
 const About = lazy(() => import('./pages/About'))
 const Auth = lazy(() => import('./pages/Auth'))
+const Account = lazy(() => import('./pages/Account'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 function RouteFallback() {
@@ -41,7 +44,17 @@ function RouteFallback() {
 
 export default function App() {
   const loc = useLocation()
+  const dispatch = useDispatch()
   const reduced = useSelector((s) => s.ui.reducedMotion)
+
+  /**
+   * Restore the session once on boot. The stored token is exchanged for the
+   * server's view of the user, which is the only thing allowed to set the role
+   * and plan — so a tampered localStorage cannot promote an account.
+   */
+  useEffect(() => {
+    dispatch(bootstrapSession())
+  }, [dispatch])
 
   useEffect(() => {
     const q = new URLSearchParams(loc.search)
@@ -60,7 +73,10 @@ export default function App() {
       '/trust': `Trust centre · ${base}`,
       '/academy': `Seller academy · ${base}`,
       '/about': `About the merge · ${base}`,
+      '/account': `Account · ${base}`,
       '/auth': `Sign in · ${base}`,
+      '/auth/reset': `Reset password · ${base}`,
+      '/auth/verify': `Confirm your email · ${base}`,
     }
     document.title = loc.pathname.startsWith('/logs/')
       ? `Log ${loc.pathname.split('/').pop()} · ${base}`
@@ -82,10 +98,10 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/logs/:id" element={<ListingDetail />} />
-            <Route path="/sell" element={<Sell />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/messages" element={<Messages />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/sell" element={<RequireSeller><Sell /></RequireSeller>} />
+            <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+            <Route path="/messages" element={<RequireAuth><Messages /></RequireAuth>} />
+            <Route path="/admin" element={<RequireAdmin><Admin /></RequireAdmin>} />
             <Route path="/studio" element={<Studio />} />
             <Route path="/tools" element={<Tools />} />
             <Route path="/docs" element={<Docs />} />
@@ -93,7 +109,10 @@ export default function App() {
             <Route path="/trust" element={<Trust />} />
             <Route path="/academy" element={<Academy />} />
             <Route path="/about" element={<About />} />
+            <Route path="/account" element={<Account />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/auth/reset" element={<Auth />} />
+            <Route path="/auth/verify" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </PageTransition>

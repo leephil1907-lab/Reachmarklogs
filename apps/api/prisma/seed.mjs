@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url'
 import 'dotenv/config'
 import prisma from '../src/configs/prisma.js'
 import { CATALOG, PLATFORM_MAP } from '../../web/src/data/catalog.js'
+import { hashPassword } from '../src/services/authService.js'
 // The one place niches are translated between the client's vocabulary
 // ("real estate") and the Postgres enum (real_estate).
 import { toEnumNiche } from '../src/services/catalogService.js'
@@ -37,6 +38,9 @@ const ENUM_PLATFORM = {
   adobe: 'adobe', notion: 'notion',
 }
 
+/** The password every seeded principal shares. Documented, not secret. */
+const DEMO_PASSWORD = process.env.DEMO_PASSWORD ?? 'reachmark-demo-2026'
+
 async function main() {
   const started = Date.now()
   console.log(`\n  Seeding ${CATALOG.listings.length} logs and ${CATALOG.sellers.length} sellers…\n`)
@@ -53,11 +57,30 @@ async function main() {
   }))
 
   /* ------------------------------------------------- demo + ops principals -- */
+  /**
+   * These three ship with real credential hashes so the product can be driven
+   * the moment it boots — the password is the documented one below, and every
+   * account is flagged `emailVerified` so nothing is gated behind a mail server
+   * that a fresh clone does not have. Rotate or delete them before a real
+   * deployment; `npm run db:reset` reproduces them.
+   */
+  const demoPasswordHash = await hashPassword(DEMO_PASSWORD)
   const principals = [
-    { id: 'demo_user_seller', email: 'ada@reachmarklogs.test', name: 'Ada Okonjo', image: CATALOG.sellers[0].avatar, earned: 74210.25, withdrawn: 55789.75, createdAt: new Date('2024-03-18') },
-    { id: 'demo_user_buyer', email: 'ada.buyer@reachmarklogs.test', name: 'Ada Okonjo', image: CATALOG.sellers[0].avatar, earned: 0, withdrawn: 0, createdAt: new Date('2024-03-18') },
-    { id: 'demo_user_admin', email: 'ops@reachmarklogs.test', name: 'Maya Ops', image: CATALOG.sellers[1].avatar, earned: 0, withdrawn: 0, createdAt: new Date('2023-11-02') },
-  ]
+    { id: 'demo_user_seller', email: 'ada@reachmarklogs.test', name: 'Ada Okonjo', image: CATALOG.sellers[0].avatar, earned: 74210.25, withdrawn: 55789.75, createdAt: new Date('2024-03-18'), role: 'seller', plan: 'pro', emailVerified: true, handle: 'ada', country: 'Nigeria', bio: 'Consolidating a portfolio of aged social and gaming logs. Escrow only.' },
+    { id: 'demo_user_buyer', email: 'ada.buyer@reachmarklogs.test', name: 'Ada Okonjo', image: CATALOG.sellers[0].avatar, earned: 0, withdrawn: 0, createdAt: new Date('2024-03-18'), role: 'buyer', plan: 'free', emailVerified: true, handle: 'adabuyer', country: 'Nigeria', bio: 'Buying aged accounts with clean recovery trails.' },
+    { id: 'demo_user_admin', email: 'ops@reachmarklogs.test', name: 'Maya Ops', image: CATALOG.sellers[1].avatar, earned: 0, withdrawn: 0, createdAt: new Date('2023-11-02'), role: 'admin', plan: 'premium', emailVerified: true, handle: 'maya', country: 'United Kingdom', bio: 'Ops desk. Credential chain review, escrow disputes, payouts.' },
+  ].map((u) => ({ ...u, passwordHash: demoPasswordHash, status: 'active', lastLoginAt: null }))
+
+  /**
+   * Sellers created from the fixture get a credential too, but a randomised one:
+   * they exist to make the floor look real, not to be signed into. The ops desk
+   * can hand any of them a reset link from the admin surface.
+   */
+  for (const row of sellerRows) {
+    row.passwordHash = null
+    row.role = 'seller'
+    row.emailVerified = true
+  }
 
   for (const row of [...sellerRows, ...principals]) {
     await prisma.user.upsert({ where: { id: row.id }, create: row, update: row })

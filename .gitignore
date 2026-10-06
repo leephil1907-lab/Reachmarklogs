@@ -28,6 +28,9 @@ services/studio/output/
 # checked into packages/harvest/ and docs/.
 upstream/
 
+# local database (PGlite data directory — real accounts, this machine only)
+apps/api/.pgdata/
+
 # local media shim (proof uploads written to disk when ImageKit is unconfigured)
 .uploads/
 
@@ -55,3 +58,9 @@ apps/web/stats.html
 
 # python bytecode from the FastAPI service
 services/studio/**/__pycache__/
+
+# The web client's env files carry no secrets — they select fixture vs live mode
+# and are what makes `npm run build` produce a same-origin production bundle.
+# The API's .env (database URL, SMTP credentials) stays ignored.
+!apps/web/.env.development
+!apps/web/.env.production

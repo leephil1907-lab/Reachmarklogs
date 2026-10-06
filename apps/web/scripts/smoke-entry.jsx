@@ -18,6 +18,7 @@ import Trust from '/src/pages/Trust.jsx'
 import Academy from '/src/pages/Academy.jsx'
 import About from '/src/pages/About.jsx'
 import Auth from '/src/pages/Auth.jsx'
+import Account from '/src/pages/Account.jsx'
 import NotFound from '/src/pages/NotFound.jsx'
 import { Navbar, Footer, CommandPalette } from '/src/components/layout/Chrome.jsx'
 import { AuroraBackdrop, CursorGlow, ScrollProgress } from '/src/components/layout/Ambience.jsx'
@@ -39,6 +40,9 @@ const routes = [
   ['/academy', Academy],
   ['/about', About],
   ['/auth', Auth],
+  ['/auth/reset', Auth],
+  ['/auth/verify', Auth],
+  ['/account', Account],
   ['/nope', NotFound],
 ]
 

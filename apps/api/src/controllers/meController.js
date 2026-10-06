@@ -14,16 +14,26 @@ export const session = async (req, res) => {
     const user = id ? await prisma.user.findUnique({ where: { id } }) : null
     res.json({
       ok: true,
-      auth: req.demoAuth ? 'demo' : 'clerk',
+      auth: req.authMode ?? (req.demoAuth ? 'demo' : 'clerk'),
       role: req.role ?? 'member',
       plan: req.plan ?? 'free',
       feeBps: feeBps(),
       escrowDays: Number(process.env.ESCROW_DEFAULT_DAYS ?? 7),
       user: user
-        ? { id: user.id, email: user.email, name: user.name, image: user.image, balance: user.earned - user.withdrawn, earned: user.earned, withdrawn: user.withdrawn }
-        : id
-          ? { id, email: null, name: 'Clerk user', image: null, balance: 0, earned: 0, withdrawn: 0 }
-          : null,
+        ? {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: user.role,
+            plan: user.plan,
+            emailVerified: user.emailVerified,
+            status: user.status,
+            balance: user.earned - user.withdrawn,
+            earned: user.earned,
+            withdrawn: user.withdrawn,
+          }
+        : { id, email: null, name: 'Clerk user', image: null, balance: 0, earned: 0, withdrawn: 0 },
     })
   } catch (error) {
     res.status(500).json({ ok: false, message: error.message })

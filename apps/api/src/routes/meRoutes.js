@@ -4,7 +4,7 @@ import { protect } from '../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
-router.get('/session', me.session)
+router.get('/session', protect, me.session)
 router.get('/listings', protect, me.listings)
 router.get('/orders', protect, me.orders)
 router.get('/payouts', protect, me.payouts)

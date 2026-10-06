@@ -5,13 +5,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import {
   ArrowUpRight, BadgeCheck, BookOpen, Boxes, ChevronRight, Command, CreditCard,
   Gauge, Layers, LayoutDashboard, LifeBuoy, LogOut, Menu, MessageSquare, PlayCircle,
-  Search, Settings, Shield, Sparkles, Store, Tag, Terminal, User, Wand2, X, Wallet,
+  Search, Settings, Shield, ShieldCheck, Sparkles, Store, Tag, Terminal, User, Wand2, X, Wallet,
 } from 'lucide-react'
+import toast from 'react-hot-toast'
 import { cn, usd, usd2 } from '../../lib/format'
 import { reachmarkMark } from '../../data/catalog'
 import { Badge, Button } from '../ui'
 import { toggleCommand, toggleMobileNav } from '../../app/features/uiSlice'
-import { signOut, setRole } from '../../app/features/authSlice'
+import { signOut } from '../../app/features/authSlice'
 import BUILD from '../../data/harvest/build-manifest.json'
 
 const NAV = [
@@ -26,7 +27,10 @@ export function Navbar() {
   const dispatch = useDispatch()
   const nav = useNavigate()
   const loc = useLocation()
-  const { user, signedIn } = useSelector((s) => s.auth)
+  const { user, signedIn, status, demo } = useSelector((s) => s.auth)
+  // `status` distinguishes "still checking" from "signed out", so the header
+  // never flashes a signed-in shell at an anonymous visitor.
+  const checking = status === 'loading'
   const mobileOpen = useSelector((s) => s.ui.mobileNavOpen)
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -104,15 +108,19 @@ export function Navbar() {
               <Search className="h-4 w-4" />
             </button>
 
-            {signedIn ? (
+            {checking ? (
+              <span className="h-9 w-24 animate-pulse rounded-xl bg-white/[0.05]" aria-hidden />
+            ) : signedIn ? (
               <>
-                <Link
-                  to="/dashboard"
-                  className="hidden items-center gap-2 rounded-xl border border-verify-500/25 bg-verify-500/10 px-3 py-2 text-[12.5px] font-medium text-verify-400 transition hover:bg-verify-500/16 md:flex"
-                >
-                  <Wallet className="h-3.5 w-3.5" />
-                  <span className="tnum">{usd(user.balance)}</span>
-                </Link>
+                {user.role !== 'buyer' && !demo && (
+                  <Link
+                    to="/dashboard"
+                    className="hidden items-center gap-2 rounded-xl border border-verify-500/25 bg-verify-500/10 px-3 py-2 text-[12.5px] font-medium text-verify-400 transition hover:bg-verify-500/16 md:flex"
+                  >
+                    <Wallet className="h-3.5 w-3.5" />
+                    <span className="tnum">{usd(user.balance)}</span>
+                  </Link>
+                )}
                 <div className="relative">
                   <button onClick={() => setMenuOpen((v) => !v)} className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-1 pr-2 transition hover:border-volt-500/40">
                     <span className="grid h-7 w-7 place-items-center rounded-lg bg-[linear-gradient(120deg,#9a86ff,#38d9f0)] text-[12px] font-bold text-ink-950">
@@ -142,7 +150,8 @@ export function Navbar() {
                         {[
                           { to: '/dashboard', label: 'Seller dashboard', icon: LayoutDashboard },
                           { to: '/messages', label: 'Messages', icon: MessageSquare, badge: user.unread },
-                          { to: '/admin', label: 'Ops console', icon: Gauge },
+                          { to: '/account', label: 'Account & security', icon: ShieldCheck },
+                          ...(user.role === 'admin' ? [{ to: '/admin', label: 'Ops console', icon: Gauge }] : []),
                           { to: '/pricing', label: 'Plans & billing', icon: CreditCard },
                         ].map((i) => (
                           <Link key={i.to} to={i.to} className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] text-slate-300 transition hover:bg-white/[0.06] hover:text-white">
@@ -151,27 +160,21 @@ export function Navbar() {
                             {i.badge ? <span className="ml-auto rounded-full bg-magenta-500/20 px-1.5 text-[10px] font-semibold text-magenta-400">{i.badge}</span> : null}
                           </Link>
                         ))}
-                        <div className="my-1 h-px bg-white/8" />
-                        <div className="px-3 pb-1 text-[10.5px] uppercase tracking-[0.16em] text-slate-500">Viewing as</div>
-                        <div className="flex gap-1.5 px-2 pb-1">
-                          {['buyer', 'seller', 'admin'].map((r) => (
-                            <button
-                              key={r}
-                              onClick={() => {
-                                dispatch(setRole(r))
-                                if (r === 'admin') nav('/admin')
-                              }}
-                              className={cn(
-                                'flex-1 rounded-lg px-2 py-1.5 text-[11.5px] font-medium capitalize transition',
-                                user.role === r ? 'bg-volt-500/20 text-volt-300 ring-1 ring-volt-500/35' : 'bg-white/[0.04] text-slate-400 hover:text-slate-200',
-                              )}
-                            >
-                              {r}
-                            </button>
-                          ))}
-                        </div>
+                        {demo && (
+                          <>
+                            <div className="my-1 h-px bg-white/8" />
+                            <div className="px-3 py-2 text-[11px] leading-relaxed text-slate-500">
+                              Local mode — this persona comes from the fixtures, not an account.
+                            </div>
+                          </>
+                        )}
                         <button
-                          onClick={() => { dispatch(signOut()); nav('/auth') }}
+                          onClick={async () => {
+                            await dispatch(signOut())
+                            setMenuOpen(false)
+                            toast.success('Signed out')
+                            nav('/')
+                          }}
                           className="mt-1 flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] text-danger-400 transition hover:bg-danger-500/10"
                         >
                           <LogOut className="h-4 w-4" /> Sign out
