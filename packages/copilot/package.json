@@ -1,0 +1,14 @@
+{
+  "name": "@reachmark/copilot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic Reachmark listing copilot: valuation, listing copy, proof-reel script, seller reply playbook and ops risk screen. Runs in Node and in the browser.",
+  "main": "./src/engine.js",
+  "exports": {
+    ".": "./src/engine.js"
+  },
+  "files": [
+    "src"
+  ]
+}

@@ -1,0 +1,2986 @@
+{
+  "$schema": "harvest-schema.json#/definitions/buildManifest",
+  "generatedBy": "tools/claw/claw.py merge",
+  "generatedAt": "2026-10-06T20:23:23+00:00",
+  "project": "Reachmark Logs",
+  "tagline": "The verified marketplace for social, gaming and aged digital logs.",
+  "sources": [
+    {
+      "repo": "AccountsBazaar",
+      "purpose": "Full-stack PERN social-account marketplace (prisma schema, chat, admin)",
+      "files": 84,
+      "loc": 16056,
+      "bytes": 1958451
+    },
+    {
+      "repo": "ui-builder",
+      "purpose": "OpenZeppelin UI Builder (shadcn/tailwind design system, wizard + form engine)",
+      "files": 536,
+      "loc": 57197,
+      "bytes": 11614224
+    },
+    {
+      "repo": "MoneyPrinterTurbo_",
+      "purpose": "Python/FastAPI short-video generation service (task pipeline, subtitles, TTS)",
+      "files": 149,
+      "loc": 47216,
+      "bytes": 3871174
+    },
+    {
+      "repo": "claw-code",
+      "purpose": "Agent harness + repository clawing utilities (probe/manifest/roadmap scripts)",
+      "files": 315,
+      "loc": 110833,
+      "bytes": 11233416
+    }
+  ],
+  "totals": {
+    "sourceFiles": 1084,
+    "sourceLoc": 231302,
+    "componentsDiscovered": 125,
+    "designSystems": 3,
+    "dataModels": 8,
+    "referenceTools": 50,
+    "referenceToolsReachable": 44
+  },
+  "capabilityMatrix": [
+    {
+      "capability": "Auth & identity",
+      "source": "AccountsBazaar (Clerk) + local demo adapter",
+      "reachmarkSurface": "Sign-in, account hub, role gating (buyer / seller / admin)"
+    },
+    {
+      "capability": "Marketplace inventory",
+      "source": "AccountsBazaar Listing model + filters",
+      "reachmarkSurface": "Reachmark Logs catalog: social + gaming/streaming + aged SaaS logs"
+    },
+    {
+      "capability": "Listing workflow",
+      "source": "AccountsBazaar listingController",
+      "reachmarkSurface": "Sell a log wizard: platform \u2192 metrics \u2192 proof \u2192 pricing \u2192 review"
+    },
+    {
+      "capability": "Proof & media",
+      "source": "AccountsBazaar ImageKit/Multer + ui-builder media fields",
+      "reachmarkSurface": "Proof vault, ownership test, screenshot reels, credential chain"
+    },
+    {
+      "capability": "Credential handover",
+      "source": "AccountsBazaar Credential model + admin verify flow",
+      "reachmarkSurface": "Escrow credential chain: submitted \u2192 verified \u2192 changed"
+    },
+    {
+      "capability": "Messaging",
+      "source": "AccountsBazaar Chat + PlatformMessage",
+      "reachmarkSurface": "Buyer\u2194seller threads with Reachmark guard bot + unread badges"
+    },
+    {
+      "capability": "Payments & payouts",
+      "source": "AccountsBazaar Transaction/Withdrawal",
+      "reachmarkSurface": "Escrow ledger, seller balance, withdrawal requests"
+    },
+    {
+      "capability": "Admin console",
+      "source": "AccountsBazaar admin pages + ui-builder wizard shell",
+      "reachmarkSurface": "Ops dashboard: revenue, verification queue, payout approvals"
+    },
+    {
+      "capability": "Design system",
+      "source": "ui-builder (shadcn new-york, Radix, tailwind tokens)",
+      "reachmarkSurface": "Radix-grade primitives, dark glass surfaces, gradient auroras"
+    },
+    {
+      "capability": "Form engine",
+      "source": "ui-builder StepFormCustomization + field registry",
+      "reachmarkSurface": "Dynamic sell-form generator driven by packages/harvest manifests"
+    },
+    {
+      "capability": "Motion layer",
+      "source": "New for Reachmark (Framer Motion + custom CSS)",
+      "reachmarkSurface": "Page transitions, scroll reveals, magnetic cards, aurora backdrops"
+    },
+    {
+      "capability": "Studio / proof reels",
+      "source": "MoneyPrinterTurbo (FastAPI) + JS reel port",
+      "reachmarkSurface": "Auto-generate proof reels & launch videos for listings"
+    },
+    {
+      "capability": "Harvest manifests",
+      "source": "claw-code harness scripts (claw.py)",
+      "reachmarkSurface": "Build-time manifests powering the reference-tool library & docs"
+    }
+  ],
+  "designSystems": [
+    {
+      "repo": "AccountsBazaar",
+      "tokens": {
+        "cssVariables": {},
+        "classes": [
+          "cl-drawerRoot",
+          "font-heading",
+          "glass-card",
+          "glass-panel",
+          "gradient-text",
+          "no-scrollbar"
+        ],
+        "keyframes": [],
+        "fonts": [
+          "Outfit",
+          "Plus Jakarta Sans"
+        ],
+        "mediaQueries": 0
+      }
+    },
+    {
+      "repo": "ui-builder",
+      "tokens": {
+        "cssVariables": {},
+        "classes": [
+          "app",
+          "container",
+          "footer",
+          "form-example",
+          "form-field",
+          "header",
+          "main"
+        ],
+        "keyframes": [],
+        "fonts": [],
+        "mediaQueries": 0
+      }
+    },
+    {
+      "repo": "MoneyPrinterTurbo_",
+      "tokens": {
+        "cssVariables": {},
+        "classes": [
+          "mpt-brand",
+          "mpt-brand__name",
+          "mpt-brand__update",
+          "mpt-brand__version"
+        ],
+        "keyframes": [],
+        "fonts": [],
+        "mediaQueries": 5
+      }
+    }
+  ],
+  "dataModels": [
+    {
+      "repo": "AccountsBazaar",
+      "models": [
+        "User",
+        "Listing",
+        "Chat",
+        "Message",
+        "PlatformMessage",
+        "Credential",
+        "Transaction",
+        "Withdrawal"
+      ],
+      "detail": [
+        {
+          "name": "User",
+          "fieldCount": 12,
+          "fields": [
+            {
+              "name": "id",
+              "type": "String",
+              "attributes": "@id"
+            },
+            {
+              "name": "email",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "name",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "image",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "earned",
+              "type": "Float",
+              "attributes": "@default(0)"
+            },
+            {
+              "name": "withdrawn",
+              "type": "Float",
+              "attributes": "@default(0)"
+            },
+            {
+              "name": "createdAt",
+              "type": "DateTime",
+              "attributes": "@default(now())"
+            },
+            {
+              "name": "updatedAt",
+              "type": "DateTime",
+              "attributes": "@updatedAt"
+            },
+            {
+              "name": "Listing",
+              "type": "Listing[]",
+              "attributes": ""
+            },
+            {
+              "name": "ownerChats",
+              "type": "Chat[]",
+              "attributes": "@relation(\"OwnerChats\")"
+            },
+            {
+              "name": "chatUserChats",
+              "type": "Chat[]",
+              "attributes": "@relation(\"ChatUserChats\")"
+            },
+            {
+              "name": "withdrawals",
+              "type": "Withdrawal[]",
+              "attributes": ""
+            }
+          ]
+        },
+        {
+          "name": "Listing",
+          "fieldCount": 27,
+          "fields": [
+            {
+              "name": "id",
+              "type": "String",
+              "attributes": "@id @default(uuid())"
+            },
+            {
+              "name": "ownerId",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "title",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "platform",
+              "type": "Platform",
+              "attributes": ""
+            },
+            {
+              "name": "username",
+              "type": "String?",
+              "attributes": ""
+            },
+            {
+              "name": "followers_count",
+              "type": "Float",
+              "attributes": ""
+            },
+            {
+              "name": "engagement_rate",
+              "type": "Float?",
+              "attributes": ""
+            },
+            {
+              "name": "monthly_views",
+              "type": "Float?",
+              "attributes": ""
+            },
+            {
+              "name": "niche",
+              "type": "Niche",
+              "attributes": ""
+            },
+            {
+              "name": "price",
+              "type": "Float",
+              "attributes": ""
+            },
+            {
+              "name": "description",
+              "type": "String?",
+              "attributes": ""
+            },
+            {
+              "name": "verified",
+              "type": "Boolean",
+              "attributes": "@default(false)"
+            },
+            {
+              "name": "monetized",
+              "type": "Boolean",
+              "attributes": "@default(false)"
+            },
+            {
+              "name": "country",
+              "type": "String?",
+              "attributes": ""
+            },
+            {
+              "name": "age_range",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "status",
+              "type": "Status",
+              "attributes": "@default(active)"
+            },
+            {
+              "name": "featured",
+              "type": "Boolean",
+              "attributes": "@default(false)"
+            },
+            {
+              "name": "images",
+              "type": "String[]",
+              "attributes": ""
+            },
+            {
+              "name": "createdAt",
+              "type": "DateTime",
+              "attributes": "@default(now())"
+            },
+            {
+              "name": "updatedAt",
+              "type": "DateTime",
+              "attributes": "@updatedAt"
+            },
+            {
+              "name": "platformAssured",
+              "type": "Boolean",
+              "attributes": "@default(false)"
+            },
+            {
+              "name": "isCredentialSubmitted",
+              "type": "Boolean",
+              "attributes": "@default(false)"
+            },
+            {
+              "name": "isCredentialVerified",
+              "type": "Boolean",
+              "attributes": "@default(false)"
+            },
+            {
+              "name": "isCredentialChanged",
+              "type": "Boolean",
+              "attributes": "@default(false)"
+            },
+            {
+              "name": "owner",
+              "type": "User",
+              "attributes": "@relation(fields: [ownerId], references: [id])"
+            },
+            {
+              "name": "chats",
+              "type": "Chat[]",
+              "attributes": ""
+            },
+            {
+              "name": "transactions",
+              "type": "Transaction[]",
+              "attributes": ""
+            }
+          ]
+        },
+        {
+          "name": "Chat",
+          "fieldCount": 16,
+          "fields": [
+            {
+              "name": "id",
+              "type": "String",
+              "attributes": "@id @default(uuid())"
+            },
+            {
+              "name": "chatUserId",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "ownerUserId",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "listingId",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "messages",
+              "type": "Message[]",
+              "attributes": ""
+            },
+            {
+              "name": "platformMessages",
+              "type": "PlatformMessage[]",
+              "attributes": ""
+            },
+            {
+              "name": "createdAt",
+              "type": "DateTime",
+              "attributes": "@default(now())"
+            },
+            {
+              "name": "updatedAt",
+              "type": "DateTime",
+              "attributes": "@updatedAt"
+            },
+            {
+              "name": "active",
+              "type": "Boolean",
+              "attributes": "@default(true)"
+            },
+            {
+              "name": "lastMessage",
+              "type": "String",
+              "attributes": "@default(\"\")"
+            },
+            {
+              "name": "isLastMessageRead",
+              "type": "Boolean",
+              "attributes": "@default(true)"
+            },
+            {
+              "name": "lastMessageSenderId",
+              "type": "String",
+              "attributes": "@default(\"\")"
+            },
+            {
+              "name": "isTokenAmountPaid",
+              "type": "Boolean",
+              "attributes": "@default(false)"
+            },
+            {
+              "name": "ownerUser",
+              "type": "User",
+              "attributes": "@relation(\"OwnerChats\", fields: [ownerUserId], references: [id])"
+            },
+            {
+              "name": "chatUser",
+              "type": "User",
+              "attributes": "@relation(\"ChatUserChats\", fields: [chatUserId], references: [id])"
+            },
+            {
+              "name": "listing",
+              "type": "Listing",
+              "attributes": "@relation(fields: [listingId], references: [id])"
+            }
+          ]
+        },
+        {
+          "name": "Message",
+          "fieldCount": 6,
+          "fields": [
+            {
+              "name": "id",
+              "type": "String",
+              "attributes": "@id @default(uuid())"
+            },
+            {
+              "name": "chatId",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "message",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "sender_id",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "createdAt",
+              "type": "DateTime",
+              "attributes": "@default(now())"
+            },
+            {
+              "name": "chat",
+              "type": "Chat",
+              "attributes": "@relation(fields: [chatId], references: [id])"
+            }
+          ]
+        },
+        {
+          "name": "PlatformMessage",
+          "fieldCount": 6,
+          "fields": [
+            {
+              "name": "id",
+              "type": "String",
+              "attributes": "@id @default(uuid())"
+            },
+            {
+              "name": "chatId",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "message",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "sender_id",
+              "type": "String",
+              "attributes": "@default(\"platform\")"
+            },
+            {
+              "name": "createdAt",
+              "type": "DateTime",
+              "attributes": "@default(now())"
+            },
+            {
+              "name": "chat",
+              "type": "Chat",
+              "attributes": "@relation(fields: [chatId], references: [id])"
+            }
+          ]
+        },
+        {
+          "name": "Credential",
+          "fieldCount": 5,
+          "fields": [
+            {
+              "name": "id",
+              "type": "String",
+              "attributes": "@id @default(uuid())"
+            },
+            {
+              "name": "listingId",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "originalCredential",
+              "type": "Json[]",
+              "attributes": "@default([])"
+            },
+            {
+              "name": "updatedCredential",
+              "type": "Json[]",
+              "attributes": "@default([])"
+            },
+            {
+              "name": "createdAt",
+              "type": "DateTime",
+              "attributes": "@default(now())"
+            }
+          ]
+        },
+        {
+          "name": "Transaction",
+          "fieldCount": 8,
+          "fields": [
+            {
+              "name": "id",
+              "type": "String",
+              "attributes": "@id @default(uuid())"
+            },
+            {
+              "name": "listingId",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "ownerId",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "userId",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "amount",
+              "type": "Float",
+              "attributes": ""
+            },
+            {
+              "name": "isPaid",
+              "type": "Boolean",
+              "attributes": "@default(false)"
+            },
+            {
+              "name": "createdAt",
+              "type": "DateTime",
+              "attributes": "@default(now())"
+            },
+            {
+              "name": "listing",
+              "type": "Listing",
+              "attributes": "@relation(fields: [listingId], references: [id])"
+            }
+          ]
+        },
+        {
+          "name": "Withdrawal",
+          "fieldCount": 8,
+          "fields": [
+            {
+              "name": "id",
+              "type": "String",
+              "attributes": "@id @default(uuid())"
+            },
+            {
+              "name": "userId",
+              "type": "String",
+              "attributes": ""
+            },
+            {
+              "name": "amount",
+              "type": "Float",
+              "attributes": ""
+            },
+            {
+              "name": "account",
+              "type": "Json[]",
+              "attributes": ""
+            },
+            {
+              "name": "isWithdrawn",
+              "type": "Boolean",
+              "attributes": "@default(false)"
+            },
+            {
+              "name": "createdAt",
+              "type": "DateTime",
+              "attributes": "@default(now())"
+            },
+            {
+              "name": "updatedAt",
+              "type": "DateTime",
+              "attributes": "@updatedAt"
+            },
+            {
+              "name": "user",
+              "type": "User",
+              "attributes": "@relation(fields: [userId], references: [id])"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "components": [
+    {
+      "repo": "AccountsBazaar",
+      "name": "ManageListing",
+      "path": "client/src/pages/ManageListing.jsx",
+      "lines": 505,
+      "kind": "listing",
+      "exports": [
+        "CheckboxField",
+        "InputField",
+        "ManageListing",
+        "Section",
+        "SelectField",
+        "TextareaField",
+        "handleInputChange",
+        "removeImage"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "assets",
+      "path": "client/src/assets/assets.jsx",
+      "lines": 399,
+      "kind": "general",
+      "exports": [
+        "assets",
+        "dummyChats",
+        "dummyListings",
+        "dummyMessages",
+        "dummyOrders",
+        "dummyUsers",
+        "dummyWithdrawalRequests",
+        "getProfileLink"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "index",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/index.tsx",
+      "lines": 392,
+      "kind": "step",
+      "exports": [
+        "StepFormCustomization",
+        "handleTogglePreview",
+        "handleUiKitConfigUpdate"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "FieldEditor",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/FieldEditor.tsx",
+      "lines": 383,
+      "kind": "field",
+      "exports": [
+        "FieldEditor"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "ListingDetails",
+      "path": "client/src/pages/ListingDetails.jsx",
+      "lines": 368,
+      "kind": "listing",
+      "exports": [
+        "ListingDetails",
+        "loadChatbox",
+        "nextSlide",
+        "prevSlide"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "MyListings",
+      "path": "client/src/pages/MyListings.jsx",
+      "lines": 341,
+      "kind": "listing",
+      "exports": [
+        "MyListings",
+        "formatNumber",
+        "getStatusColor",
+        "getStatusIcon"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "index",
+      "path": "apps/builder/src/components/UIBuilder/index.tsx",
+      "lines": 318,
+      "kind": "general",
+      "exports": [
+        "UIBuilder",
+        "handleNetworkSelection",
+        "handleNetworkSwitchComplete"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "FilterSidebar",
+      "path": "client/src/components/FilterSidebar.jsx",
+      "lines": 288,
+      "kind": "filter",
+      "exports": [
+        "FilterSidebar",
+        "onClearFilters",
+        "onFiltersChange",
+        "onSearchChange",
+        "toggleSection"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractDefinitionComparisonModal",
+      "path": "apps/builder/src/components/warnings/ContractDefinitionComparisonModal.tsx",
+      "lines": 254,
+      "kind": "modal",
+      "exports": [
+        "ContractDefinitionComparisonModal",
+        "getChangeColor",
+        "getChangeIcon",
+        "getImpactColor",
+        "getSeverityColor"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "UiKitSettings",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/UiKitSettings.tsx",
+      "lines": 243,
+      "kind": "step",
+      "exports": [
+        "UiKitSettings"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "FieldBasicSettings",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/FieldBasicSettings.tsx",
+      "lines": 242,
+      "kind": "field",
+      "exports": [
+        "FieldBasicSettings"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "NetworkSelectionPanel",
+      "path": "apps/builder/src/components/UIBuilder/StepChainSelection/components/NetworkSelectionPanel.tsx",
+      "lines": 236,
+      "kind": "step",
+      "exports": [
+        "NetworkSelectionPanel",
+        "handleCloseNetworkSettings",
+        "handleOpenNetworkSettings"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ChainSelector",
+      "path": "apps/builder/src/components/UIBuilder/StepChainSelection/components/ChainSelector.tsx",
+      "lines": 233,
+      "kind": "step",
+      "exports": [
+        "ChainSelector"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Marketplace",
+      "path": "client/src/pages/Marketplace.jsx",
+      "lines": 229,
+      "kind": "general",
+      "exports": [
+        "Marketplace"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractSuccessStatus",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/components/ContractSuccessStatus.tsx",
+      "lines": 221,
+      "kind": "step",
+      "exports": [
+        "ContractSuccessStatus"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "StepContractDefinition",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/StepContractDefinition.tsx",
+      "lines": 219,
+      "kind": "step",
+      "exports": [
+        "StepContractDefinition"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "form-component.template",
+      "path": "apps/builder/src/export/codeTemplates/form-component.template.tsx",
+      "lines": 212,
+      "kind": "export",
+      "exports": [
+        "GeneratedForm",
+        "toBuilderAdapter",
+        "toggleWidget"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "MyOrders",
+      "path": "client/src/pages/MyOrders.jsx",
+      "lines": 210,
+      "kind": "general",
+      "exports": [
+        "MyOrders",
+        "mask"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractDefinitionMismatchWarning",
+      "path": "apps/builder/src/components/warnings/ContractDefinitionMismatchWarning.tsx",
+      "lines": 203,
+      "kind": "general",
+      "exports": [
+        "ContractDefinitionMismatchWarning"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Chatbox",
+      "path": "client/src/components/Chatbox.jsx",
+      "lines": 193,
+      "kind": "chat",
+      "exports": [
+        "Chatbox"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "OptionSelector",
+      "path": "apps/builder/src/components/Common/OptionSelector.tsx",
+      "lines": 193,
+      "kind": "general",
+      "exports": [
+        "OptionSelector"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "UiKitSettings.test",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/__tests__/UiKitSettings.test.tsx",
+      "lines": 191,
+      "kind": "step",
+      "exports": []
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Navbar",
+      "path": "client/src/components/Navbar.jsx",
+      "lines": 188,
+      "kind": "navbar",
+      "exports": [
+        "Navbar",
+        "isActive"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "manualAbiLoad.test",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/__tests__/manualAbiLoad.test.tsx",
+      "lines": 178,
+      "kind": "step",
+      "exports": []
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ResponsiveUiKitSelector",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/ResponsiveUiKitSelector.tsx",
+      "lines": 174,
+      "kind": "step",
+      "exports": [
+        "ResponsiveUiKitSelector"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ResponsiveExecutionMethodSelector",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/ResponsiveExecutionMethodSelector.tsx",
+      "lines": 172,
+      "kind": "step",
+      "exports": [
+        "ResponsiveExecutionMethodSelector"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "index",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RelayerConfiguration/index.tsx",
+      "lines": 170,
+      "kind": "step",
+      "exports": [
+        "RelayerConfiguration",
+        "handleFetchRelayers"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "WizardLayout",
+      "path": "apps/builder/src/components/Common/WizardLayout.tsx",
+      "lines": 169,
+      "kind": "wizard",
+      "exports": [
+        "WizardLayout",
+        "handleNext",
+        "handlePrevious"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "main.template",
+      "path": "apps/builder/src/export/codeTemplates/main.template.tsx",
+      "lines": 167,
+      "kind": "export",
+      "exports": [
+        "getNetworkConfigById"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "GeneralSettings",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/GeneralSettings.tsx",
+      "lines": 159,
+      "kind": "step",
+      "exports": [
+        "GeneralSettings"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ProxyStatusIndicator",
+      "path": "apps/builder/src/components/warnings/ProxyStatusIndicator.tsx",
+      "lines": 156,
+      "kind": "general",
+      "exports": [
+        "ProxyStatusIndicator"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractUIItem",
+      "path": "apps/builder/src/components/Sidebar/ContractUIs/ContractUIItem.tsx",
+      "lines": 155,
+      "kind": "sidebar",
+      "exports": [
+        "ContractUIItem"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Messages",
+      "path": "client/src/pages/Messages.jsx",
+      "lines": 153,
+      "kind": "general",
+      "exports": [
+        "Messages",
+        "formatTime",
+        "handleOpenChat"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "deepLinkDedupe.test",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/__tests__/deepLinkDedupe.test.tsx",
+      "lines": 152,
+      "kind": "step",
+      "exports": []
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ChainSelector.test",
+      "path": "apps/builder/src/components/UIBuilder/StepChainSelection/__tests__/ChainSelector.test.tsx",
+      "lines": 149,
+      "kind": "step",
+      "exports": [
+        "renderSelector"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "useNetworkServiceHealthCheck.test",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/__tests__/useNetworkServiceHealthCheck.test.tsx",
+      "lines": 149,
+      "kind": "step",
+      "exports": []
+    },
+    {
+      "repo": "ui-builder",
+      "name": "AddressBookDialog",
+      "path": "apps/builder/src/components/AddressBook/AddressBookDialog.tsx",
+      "lines": 140,
+      "kind": "general",
+      "exports": [
+        "AddressBookDialog"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Hero",
+      "path": "client/src/components/Hero.jsx",
+      "lines": 137,
+      "kind": "hero",
+      "exports": [
+        "Hero",
+        "onSubmitHandler"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ResponsiveFieldsLayout",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/ResponsiveFieldsLayout.tsx",
+      "lines": 134,
+      "kind": "field",
+      "exports": [
+        "ResponsiveFieldsLayout"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "AnalyticsIntegration.test",
+      "path": "apps/builder/src/components/__tests__/AnalyticsIntegration.test.tsx",
+      "lines": 134,
+      "kind": "general",
+      "exports": [
+        "TestComponent"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "ListingDetailsModal",
+      "path": "client/src/components/admin/ListingDetailsModal.jsx",
+      "lines": 133,
+      "kind": "admin",
+      "exports": [
+        "ListingDetailsModal"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "RelayerCredentialsCard",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RelayerConfiguration/components/RelayerCredentialsCard.tsx",
+      "lines": 130,
+      "kind": "credential",
+      "exports": [
+        "RelayerCredentialsCard"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "NetworkRow",
+      "path": "apps/builder/src/components/UIBuilder/StepChainSelection/components/NetworkRow.tsx",
+      "lines": 129,
+      "kind": "step",
+      "exports": [
+        "NetworkRow"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "App",
+      "path": "apps/builder/src/App.tsx",
+      "lines": 128,
+      "kind": "general",
+      "exports": []
+    },
+    {
+      "repo": "ui-builder",
+      "name": "FieldDisplays",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/FieldDisplays.tsx",
+      "lines": 128,
+      "kind": "field",
+      "exports": [
+        "FieldHeader",
+        "ParameterFieldDisplay",
+        "RuntimeSecretFieldDisplay"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "CredentialVerifyModal",
+      "path": "client/src/components/admin/CredentialVerifyModal.jsx",
+      "lines": 126,
+      "kind": "admin",
+      "exports": [
+        "CredentialVerifyModal",
+        "copyToClipboard"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "AllListings",
+      "path": "client/src/pages/admin/AllListings.jsx",
+      "lines": 126,
+      "kind": "admin",
+      "exports": [
+        "AllListings"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractUIsList",
+      "path": "apps/builder/src/components/Sidebar/ContractUIs/ContractUIsList.tsx",
+      "lines": 126,
+      "kind": "sidebar",
+      "exports": [
+        "ContractUIsList"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractUIImportDialog",
+      "path": "apps/builder/src/components/Sidebar/ContractUIs/ContractUIImportDialog.tsx",
+      "lines": 124,
+      "kind": "sidebar",
+      "exports": [
+        "ContractUIImportDialog",
+        "handleClose"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "CredentialChangeModal",
+      "path": "client/src/components/admin/CredentialChangeModal.jsx",
+      "lines": 122,
+      "kind": "admin",
+      "exports": [
+        "CredentialChangeModal",
+        "copyToClipboard"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "handleUiKitConfigUpdate.test",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/__tests__/handleUiKitConfigUpdate.test.tsx",
+      "lines": 120,
+      "kind": "step",
+      "exports": [
+        "handleUiKitConfigUpdate"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "App",
+      "path": "client/src/App.jsx",
+      "lines": 118,
+      "kind": "general",
+      "exports": [
+        "App"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "ListingCard",
+      "path": "client/src/components/ListingCard.jsx",
+      "lines": 117,
+      "kind": "listing",
+      "exports": [
+        "ListingCard"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "RelayerGasConfigurationCard",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RelayerConfiguration/components/RelayerGasConfigurationCard.tsx",
+      "lines": 116,
+      "kind": "card",
+      "exports": [
+        "RelayerGasConfigurationCard"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "WritableFunctionRow",
+      "path": "apps/builder/src/components/UIBuilder/StepFunctionSelector/WritableFunctionRow.tsx",
+      "lines": 114,
+      "kind": "step",
+      "exports": [
+        "WritableFunctionRow"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Dashboard",
+      "path": "client/src/pages/admin/Dashboard.jsx",
+      "lines": 111,
+      "kind": "admin",
+      "exports": [
+        "Dashboard"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Footer",
+      "path": "client/src/components/Footer.jsx",
+      "lines": 107,
+      "kind": "footer",
+      "exports": [
+        "Footer",
+        "scrollToTop"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "WithdrawalDetail",
+      "path": "client/src/components/admin/WithdrawalDetail.jsx",
+      "lines": 107,
+      "kind": "admin",
+      "exports": [
+        "WithdrawalDetail",
+        "copyToClipboard"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "RelayerSelectionCard",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RelayerConfiguration/components/RelayerSelectionCard.tsx",
+      "lines": 107,
+      "kind": "card",
+      "exports": [
+        "RelayerSelectionCard"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "DevToolsDropdown",
+      "path": "apps/builder/src/components/Common/DevToolsDropdown.tsx",
+      "lines": 106,
+      "kind": "general",
+      "exports": [
+        "DevToolsDropdown",
+        "triggerExplorerError",
+        "triggerRpcError"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "CredentialSubmission",
+      "path": "client/src/components/CredentialSubmission.jsx",
+      "lines": 104,
+      "kind": "credential",
+      "exports": [
+        "CredentialSubmission",
+        "handleAddField"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "MainActions",
+      "path": "apps/builder/src/components/Sidebar/AppSidebar/MainActions.tsx",
+      "lines": 103,
+      "kind": "sidebar",
+      "exports": [
+        "MainActions",
+        "handleImport",
+        "hasMeaningfulRecords"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "PrimaryMethodSelector",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/PrimaryMethodSelector.tsx",
+      "lines": 103,
+      "kind": "step",
+      "exports": [
+        "PrimaryMethodSelector",
+        "configContent"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractDefinitionSourceIndicator",
+      "path": "apps/builder/src/components/warnings/ContractDefinitionSourceIndicator.tsx",
+      "lines": 103,
+      "kind": "general",
+      "exports": [
+        "ContractDefinitionSourceIndicator",
+        "getDisplaySource"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Withdrawal",
+      "path": "client/src/pages/admin/Withdrawal.jsx",
+      "lines": 102,
+      "kind": "admin",
+      "exports": [
+        "Withdrawal"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractUIRenameDialog",
+      "path": "apps/builder/src/components/Sidebar/ContractUIs/ContractUIRenameDialog.tsx",
+      "lines": 100,
+      "kind": "sidebar",
+      "exports": [
+        "ContractUIRenameDialog"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "MobileFieldSelector",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/MobileFieldSelector.tsx",
+      "lines": 98,
+      "kind": "field",
+      "exports": [
+        "MobileFieldSelector"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "CredentialVerify",
+      "path": "client/src/pages/admin/CredentialVerify.jsx",
+      "lines": 97,
+      "kind": "admin",
+      "exports": [
+        "CredentialVerify"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "CredentialChange",
+      "path": "client/src/pages/admin/CredentialChange.jsx",
+      "lines": 96,
+      "kind": "admin",
+      "exports": [
+        "CredentialChange"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "NetworkErrorHandler",
+      "path": "apps/builder/src/components/Common/NetworkErrorHandler.tsx",
+      "lines": 95,
+      "kind": "general",
+      "exports": [
+        "NetworkErrorHandler",
+        "handleCloseNetworkSettings"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "WithdrawModal",
+      "path": "client/src/components/WithdrawModal.jsx",
+      "lines": 93,
+      "kind": "withdraw",
+      "exports": [
+        "WithdrawModal"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "FormPreview",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/FormPreview.tsx",
+      "lines": 93,
+      "kind": "step",
+      "exports": [
+        "FormPreview"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractLoadingErrors",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/components/ContractLoadingErrors.tsx",
+      "lines": 87,
+      "kind": "step",
+      "exports": [
+        "ContractLoadingErrors"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Transactions",
+      "path": "client/src/pages/admin/Transactions.jsx",
+      "lines": 86,
+      "kind": "admin",
+      "exports": [
+        "Transactions"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "StepComplete",
+      "path": "apps/builder/src/components/UIBuilder/StepComplete/StepComplete.tsx",
+      "lines": 86,
+      "kind": "step",
+      "exports": [
+        "StepComplete"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ActionBar",
+      "path": "apps/builder/src/components/Common/ActionBar.tsx",
+      "lines": 85,
+      "kind": "general",
+      "exports": [
+        "ActionBar"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "StorageOperationsContext",
+      "path": "apps/builder/src/contexts/StorageOperationsContext.tsx",
+      "lines": 83,
+      "kind": "general",
+      "exports": [
+        "StorageOperationsProvider",
+        "setDeleting",
+        "setDuplicating",
+        "setExporting",
+        "setLoading",
+        "setSaving",
+        "updateOperationState"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "StepFunctionSelector",
+      "path": "apps/builder/src/components/UIBuilder/StepFunctionSelector/StepFunctionSelector.tsx",
+      "lines": 82,
+      "kind": "step",
+      "exports": [
+        "StepFunctionSelector"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "TitledSection",
+      "path": "apps/builder/src/components/Common/TitledSection.tsx",
+      "lines": 81,
+      "kind": "general",
+      "exports": [
+        "TitledSection"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "FieldSelectorList",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/FieldSelectorList.tsx",
+      "lines": 79,
+      "kind": "field",
+      "exports": [
+        "FieldSelectorList"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "FieldAdvancedSettings",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/FieldAdvancedSettings.tsx",
+      "lines": 77,
+      "kind": "field",
+      "exports": [
+        "FieldAdvancedSettings"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "app-component.template",
+      "path": "apps/builder/src/export/codeTemplates/app-component.template.tsx",
+      "lines": 77,
+      "kind": "export",
+      "exports": [
+        "App"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Layout",
+      "path": "client/src/pages/admin/Layout.jsx",
+      "lines": 76,
+      "kind": "admin",
+      "exports": [
+        "Layout"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Plans",
+      "path": "client/src/components/Plans.jsx",
+      "lines": 73,
+      "kind": "plans",
+      "exports": [
+        "Plans"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "AppSidebar",
+      "path": "apps/builder/src/components/Sidebar/AppSidebar/AppSidebar.tsx",
+      "lines": 71,
+      "kind": "sidebar",
+      "exports": [
+        "AppSidebar",
+        "handleLoadContractUI"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "RuntimeSecretButton",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RuntimeSecretButton.tsx",
+      "lines": 70,
+      "kind": "step",
+      "exports": [
+        "RuntimeSecretButton",
+        "handleReaddRuntimeSecret"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractFormFields",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/components/ContractFormFields.tsx",
+      "lines": 67,
+      "kind": "field",
+      "exports": [
+        "ContractFormFields"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "AliasLabelBridge",
+      "path": "apps/builder/src/contexts/AliasLabelBridge.tsx",
+      "lines": 67,
+      "kind": "general",
+      "exports": [
+        "AliasLabelBridge"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "LatestListings",
+      "path": "client/src/components/LatestListings.jsx",
+      "lines": 61,
+      "kind": "listing",
+      "exports": [
+        "LatestListings"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "WritableFunctionsSection",
+      "path": "apps/builder/src/components/UIBuilder/StepFunctionSelector/WritableFunctionsSection.tsx",
+      "lines": 61,
+      "kind": "step",
+      "exports": [
+        "WritableFunctionsSection"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ExecutionMethodSettings",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/ExecutionMethodSettings.tsx",
+      "lines": 58,
+      "kind": "step",
+      "exports": [
+        "ExecutionMethodSettings"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "BlockchainAddressFieldWithRichPreview",
+      "path": "apps/builder/src/components/fields/BlockchainAddressFieldWithRichPreview.tsx",
+      "lines": 58,
+      "kind": "field",
+      "exports": [
+        "BlockchainAddressFieldWithRichPreview"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "useContractForm.reset-guard.test",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/__tests__/useContractForm.reset-guard.test.tsx",
+      "lines": 57,
+      "kind": "step",
+      "exports": []
+    },
+    {
+      "repo": "ui-builder",
+      "name": "TypeConversionWarning",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/TypeConversionWarning.tsx",
+      "lines": 57,
+      "kind": "step",
+      "exports": [
+        "TypeConversionWarning",
+        "getMessage"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "CTA",
+      "path": "client/src/components/CTA.jsx",
+      "lines": 56,
+      "kind": "general",
+      "exports": [
+        "CTA"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "TypeWarningSection",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/TypeWarningSection.tsx",
+      "lines": 54,
+      "kind": "step",
+      "exports": [
+        "TypeWarningSection"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "EoaConfiguration",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/EoaConfiguration.tsx",
+      "lines": 54,
+      "kind": "step",
+      "exports": [
+        "EoaConfiguration"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "GeneratedForm",
+      "path": "apps/builder/src/export/templates/typescript-react-vite/src/components/GeneratedForm.tsx",
+      "lines": 52,
+      "kind": "export",
+      "exports": [
+        "GeneratedForm"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "TrimmedArtifactsBanner",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/components/TrimmedArtifactsBanner.tsx",
+      "lines": 51,
+      "kind": "step",
+      "exports": [
+        "TrimmedArtifactsBanner"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "App",
+      "path": "apps/builder/src/export/templates/typescript-react-vite/src/App.tsx",
+      "lines": 49,
+      "kind": "export",
+      "exports": [
+        "App"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractUIDeleteDialog",
+      "path": "apps/builder/src/components/Sidebar/ContractUIs/ContractUIDeleteDialog.tsx",
+      "lines": 47,
+      "kind": "sidebar",
+      "exports": [
+        "ContractUIDeleteDialog"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "SidebarContent",
+      "path": "apps/builder/src/components/Sidebar/AppSidebar/SidebarContent.tsx",
+      "lines": 45,
+      "kind": "sidebar",
+      "exports": [
+        "SidebarContent"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "AdminSidebar",
+      "path": "client/src/components/admin/AdminSidebar.jsx",
+      "lines": 40,
+      "kind": "admin",
+      "exports": [
+        "AdminSidebar"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractUIsSection",
+      "path": "apps/builder/src/components/Sidebar/AppSidebar/ContractUIsSection.tsx",
+      "lines": 40,
+      "kind": "sidebar",
+      "exports": [
+        "ContractUIsSection"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "FilterControls",
+      "path": "apps/builder/src/components/UIBuilder/StepFunctionSelector/FilterControls.tsx",
+      "lines": 37,
+      "kind": "filter",
+      "exports": [
+        "FilterControls"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "SidebarNavIcons",
+      "path": "apps/builder/src/components/Sidebar/AppSidebar/SidebarNavIcons.tsx",
+      "lines": 36,
+      "kind": "sidebar",
+      "exports": [
+        "SidebarNavIcons"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "main",
+      "path": "apps/builder/src/export/templates/typescript-react-vite/src/main.tsx",
+      "lines": 36,
+      "kind": "export",
+      "exports": []
+    },
+    {
+      "repo": "ui-builder",
+      "name": "OtherToolsSection",
+      "path": "apps/builder/src/components/Sidebar/AppSidebar/OtherToolsSection.tsx",
+      "lines": 34,
+      "kind": "sidebar",
+      "exports": [
+        "OtherToolsSection"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "NameResolverBridge",
+      "path": "apps/builder/src/contexts/NameResolverBridge.tsx",
+      "lines": 31,
+      "kind": "general",
+      "exports": [
+        "NameResolverBridge"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "StatCard",
+      "path": "client/src/components/StatCard.jsx",
+      "lines": 27,
+      "kind": "card",
+      "exports": [
+        "StatCard"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "main",
+      "path": "apps/builder/src/main.tsx",
+      "lines": 27,
+      "kind": "general",
+      "exports": []
+    },
+    {
+      "repo": "ui-builder",
+      "name": "FunctionNoteSection",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/FunctionNoteSection.tsx",
+      "lines": 27,
+      "kind": "step",
+      "exports": [
+        "FunctionNoteSection"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "StepTitleWithDescription",
+      "path": "apps/builder/src/components/UIBuilder/Common/StepTitleWithDescription.tsx",
+      "lines": 26,
+      "kind": "step",
+      "exports": [
+        "StepTitleWithDescription"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "main",
+      "path": "client/src/main.jsx",
+      "lines": 24,
+      "kind": "general",
+      "exports": []
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Loading",
+      "path": "client/src/pages/Loading.jsx",
+      "lines": 24,
+      "kind": "general",
+      "exports": [
+        "Loading"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "RelayerHeader",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RelayerConfiguration/components/RelayerHeader.tsx",
+      "lines": 23,
+      "kind": "step",
+      "exports": [
+        "RelayerHeader"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractUIStorageProvider",
+      "path": "apps/builder/src/contexts/ContractUIStorageProvider.tsx",
+      "lines": 23,
+      "kind": "general",
+      "exports": [
+        "ContractUIStorageProvider"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Home",
+      "path": "client/src/pages/Home.jsx",
+      "lines": 22,
+      "kind": "general",
+      "exports": [
+        "Home"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "Header",
+      "path": "apps/builder/src/components/Common/Header.tsx",
+      "lines": 22,
+      "kind": "general",
+      "exports": [
+        "Header"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "NetworkDetail",
+      "path": "apps/builder/src/components/UIBuilder/StepChainSelection/components/NetworkDetail.tsx",
+      "lines": 20,
+      "kind": "step",
+      "exports": [
+        "NetworkDetail"
+      ]
+    }
+  ],
+  "reusableComponents": [
+    {
+      "repo": "AccountsBazaar",
+      "name": "ManageListing",
+      "path": "client/src/pages/ManageListing.jsx",
+      "lines": 505,
+      "kind": "listing",
+      "exports": [
+        "CheckboxField",
+        "InputField",
+        "ManageListing",
+        "Section",
+        "SelectField",
+        "TextareaField",
+        "handleInputChange",
+        "removeImage"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "assets",
+      "path": "client/src/assets/assets.jsx",
+      "lines": 399,
+      "kind": "general",
+      "exports": [
+        "assets",
+        "dummyChats",
+        "dummyListings",
+        "dummyMessages",
+        "dummyOrders",
+        "dummyUsers",
+        "dummyWithdrawalRequests",
+        "getProfileLink"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "index",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/index.tsx",
+      "lines": 392,
+      "kind": "step",
+      "exports": [
+        "StepFormCustomization",
+        "handleTogglePreview",
+        "handleUiKitConfigUpdate"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "FieldEditor",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/FieldEditor.tsx",
+      "lines": 383,
+      "kind": "field",
+      "exports": [
+        "FieldEditor"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "ListingDetails",
+      "path": "client/src/pages/ListingDetails.jsx",
+      "lines": 368,
+      "kind": "listing",
+      "exports": [
+        "ListingDetails",
+        "loadChatbox",
+        "nextSlide",
+        "prevSlide"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "MyListings",
+      "path": "client/src/pages/MyListings.jsx",
+      "lines": 341,
+      "kind": "listing",
+      "exports": [
+        "MyListings",
+        "formatNumber",
+        "getStatusColor",
+        "getStatusIcon"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "index",
+      "path": "apps/builder/src/components/UIBuilder/index.tsx",
+      "lines": 318,
+      "kind": "general",
+      "exports": [
+        "UIBuilder",
+        "handleNetworkSelection",
+        "handleNetworkSwitchComplete"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "FilterSidebar",
+      "path": "client/src/components/FilterSidebar.jsx",
+      "lines": 288,
+      "kind": "filter",
+      "exports": [
+        "FilterSidebar",
+        "onClearFilters",
+        "onFiltersChange",
+        "onSearchChange",
+        "toggleSection"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractDefinitionComparisonModal",
+      "path": "apps/builder/src/components/warnings/ContractDefinitionComparisonModal.tsx",
+      "lines": 254,
+      "kind": "modal",
+      "exports": [
+        "ContractDefinitionComparisonModal",
+        "getChangeColor",
+        "getChangeIcon",
+        "getImpactColor",
+        "getSeverityColor"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "UiKitSettings",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/UiKitSettings.tsx",
+      "lines": 243,
+      "kind": "step",
+      "exports": [
+        "UiKitSettings"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "FieldBasicSettings",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/FieldBasicSettings.tsx",
+      "lines": 242,
+      "kind": "field",
+      "exports": [
+        "FieldBasicSettings"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "NetworkSelectionPanel",
+      "path": "apps/builder/src/components/UIBuilder/StepChainSelection/components/NetworkSelectionPanel.tsx",
+      "lines": 236,
+      "kind": "step",
+      "exports": [
+        "NetworkSelectionPanel",
+        "handleCloseNetworkSettings",
+        "handleOpenNetworkSettings"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ChainSelector",
+      "path": "apps/builder/src/components/UIBuilder/StepChainSelection/components/ChainSelector.tsx",
+      "lines": 233,
+      "kind": "step",
+      "exports": [
+        "ChainSelector"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Marketplace",
+      "path": "client/src/pages/Marketplace.jsx",
+      "lines": 229,
+      "kind": "general",
+      "exports": [
+        "Marketplace"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractSuccessStatus",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/components/ContractSuccessStatus.tsx",
+      "lines": 221,
+      "kind": "step",
+      "exports": [
+        "ContractSuccessStatus"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "StepContractDefinition",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/StepContractDefinition.tsx",
+      "lines": 219,
+      "kind": "step",
+      "exports": [
+        "StepContractDefinition"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "form-component.template",
+      "path": "apps/builder/src/export/codeTemplates/form-component.template.tsx",
+      "lines": 212,
+      "kind": "export",
+      "exports": [
+        "GeneratedForm",
+        "toBuilderAdapter",
+        "toggleWidget"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "MyOrders",
+      "path": "client/src/pages/MyOrders.jsx",
+      "lines": 210,
+      "kind": "general",
+      "exports": [
+        "MyOrders",
+        "mask"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractDefinitionMismatchWarning",
+      "path": "apps/builder/src/components/warnings/ContractDefinitionMismatchWarning.tsx",
+      "lines": 203,
+      "kind": "general",
+      "exports": [
+        "ContractDefinitionMismatchWarning"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Chatbox",
+      "path": "client/src/components/Chatbox.jsx",
+      "lines": 193,
+      "kind": "chat",
+      "exports": [
+        "Chatbox"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "OptionSelector",
+      "path": "apps/builder/src/components/Common/OptionSelector.tsx",
+      "lines": 193,
+      "kind": "general",
+      "exports": [
+        "OptionSelector"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "UiKitSettings.test",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/__tests__/UiKitSettings.test.tsx",
+      "lines": 191,
+      "kind": "step",
+      "exports": []
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Navbar",
+      "path": "client/src/components/Navbar.jsx",
+      "lines": 188,
+      "kind": "navbar",
+      "exports": [
+        "Navbar",
+        "isActive"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "manualAbiLoad.test",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/__tests__/manualAbiLoad.test.tsx",
+      "lines": 178,
+      "kind": "step",
+      "exports": []
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ResponsiveUiKitSelector",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/ResponsiveUiKitSelector.tsx",
+      "lines": 174,
+      "kind": "step",
+      "exports": [
+        "ResponsiveUiKitSelector"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ResponsiveExecutionMethodSelector",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/ResponsiveExecutionMethodSelector.tsx",
+      "lines": 172,
+      "kind": "step",
+      "exports": [
+        "ResponsiveExecutionMethodSelector"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "index",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RelayerConfiguration/index.tsx",
+      "lines": 170,
+      "kind": "step",
+      "exports": [
+        "RelayerConfiguration",
+        "handleFetchRelayers"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "WizardLayout",
+      "path": "apps/builder/src/components/Common/WizardLayout.tsx",
+      "lines": 169,
+      "kind": "wizard",
+      "exports": [
+        "WizardLayout",
+        "handleNext",
+        "handlePrevious"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "main.template",
+      "path": "apps/builder/src/export/codeTemplates/main.template.tsx",
+      "lines": 167,
+      "kind": "export",
+      "exports": [
+        "getNetworkConfigById"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "GeneralSettings",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/GeneralSettings.tsx",
+      "lines": 159,
+      "kind": "step",
+      "exports": [
+        "GeneralSettings"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ProxyStatusIndicator",
+      "path": "apps/builder/src/components/warnings/ProxyStatusIndicator.tsx",
+      "lines": 156,
+      "kind": "general",
+      "exports": [
+        "ProxyStatusIndicator"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ContractUIItem",
+      "path": "apps/builder/src/components/Sidebar/ContractUIs/ContractUIItem.tsx",
+      "lines": 155,
+      "kind": "sidebar",
+      "exports": [
+        "ContractUIItem"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Messages",
+      "path": "client/src/pages/Messages.jsx",
+      "lines": 153,
+      "kind": "general",
+      "exports": [
+        "Messages",
+        "formatTime",
+        "handleOpenChat"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "deepLinkDedupe.test",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/__tests__/deepLinkDedupe.test.tsx",
+      "lines": 152,
+      "kind": "step",
+      "exports": []
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ChainSelector.test",
+      "path": "apps/builder/src/components/UIBuilder/StepChainSelection/__tests__/ChainSelector.test.tsx",
+      "lines": 149,
+      "kind": "step",
+      "exports": [
+        "renderSelector"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "useNetworkServiceHealthCheck.test",
+      "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/__tests__/useNetworkServiceHealthCheck.test.tsx",
+      "lines": 149,
+      "kind": "step",
+      "exports": []
+    },
+    {
+      "repo": "ui-builder",
+      "name": "AddressBookDialog",
+      "path": "apps/builder/src/components/AddressBook/AddressBookDialog.tsx",
+      "lines": 140,
+      "kind": "general",
+      "exports": [
+        "AddressBookDialog"
+      ]
+    },
+    {
+      "repo": "AccountsBazaar",
+      "name": "Hero",
+      "path": "client/src/components/Hero.jsx",
+      "lines": 137,
+      "kind": "hero",
+      "exports": [
+        "Hero",
+        "onSubmitHandler"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "ResponsiveFieldsLayout",
+      "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/ResponsiveFieldsLayout.tsx",
+      "lines": 134,
+      "kind": "field",
+      "exports": [
+        "ResponsiveFieldsLayout"
+      ]
+    },
+    {
+      "repo": "ui-builder",
+      "name": "AnalyticsIntegration.test",
+      "path": "apps/builder/src/components/__tests__/AnalyticsIntegration.test.tsx",
+      "lines": 134,
+      "kind": "general",
+      "exports": [
+        "TestComponent"
+      ]
+    }
+  ],
+  "referenceToolCategories": [
+    "AI audio",
+    "AI demos",
+    "AI discovery",
+    "AI docs",
+    "AI image",
+    "AI video",
+    "API tooling",
+    "Canvas",
+    "Code media",
+    "Design",
+    "Design assets",
+    "Dev utilities",
+    "Illustration",
+    "Learning",
+    "Live data",
+    "Media utils",
+    "Perf tooling",
+    "Stock media"
+  ],
+  "referenceTools": [
+    {
+      "slug": "futuretools-io",
+      "name": "Future Tools",
+      "url": "https://futuretools.io",
+      "category": "AI discovery",
+      "whatItIs": "Discover useful AI tools",
+      "reachmarkUse": "Directory layout + filter UX for the Reachmark tool library page",
+      "status": "ok",
+      "title": "Future Tools - The Pulse of AI",
+      "themeColor": "",
+      "favicon": "https://futuretools.io/favicon.ico?favicon.2vob68tjqpejf.ico"
+    },
+    {
+      "slug": "theresanaiforthat",
+      "name": "There's An AI For That",
+      "url": "https://theresanaiforthat.com",
+      "category": "AI discovery",
+      "whatItIs": "Find AI tools for almost anything",
+      "reachmarkUse": "Category mega-menu + search-first hero pattern",
+      "status": "ok",
+      "title": "There's An AI For That\u00ae \u2014 The front page of AI",
+      "themeColor": "#2d2e3a",
+      "favicon": "https://theresanaiforthat.com/apple-touch-icon.png"
+    },
+    {
+      "slug": "aitools-fyi",
+      "name": "AI Tools FYI",
+      "url": "https://aitools.fyi",
+      "category": "AI discovery",
+      "whatItIs": "Explore AI tools & apps",
+      "reachmarkUse": "Card grid density and tag chips for catalog browsing",
+      "status": "ok",
+      "title": "aitools.fyi - Find Best AI Tools That Make Your Life Easy!",
+      "themeColor": "",
+      "favicon": "https://aitools.fyi/favicon.ico"
+    },
+    {
+      "slug": "hf-spaces",
+      "name": "Hugging Face Spaces",
+      "url": "https://huggingface.co/spaces",
+      "category": "AI demos",
+      "whatItIs": "Try community-built AI demos",
+      "reachmarkUse": "Model/demo card metadata rows and runtime badges",
+      "status": "ok",
+      "title": "Spaces - Hugging Face",
+      "themeColor": "",
+      "favicon": ""
+    },
+    {
+      "slug": "replicate",
+      "name": "Replicate",
+      "url": "https://replicate.com",
+      "category": "AI demos",
+      "whatItIs": "Run AI models online",
+      "reachmarkUse": "Code-forward developer aesthetic + copyable snippets",
+      "status": "ok",
+      "title": "Replicate - Run AI with an API",
+      "themeColor": "",
+      "favicon": "https://static.replicateassets.com/fe/4fa86b07de3ad4ea584bc1f339cff05cc96889c9/favicon-CKiqAkf2.png"
+    },
+    {
+      "slug": "runwayml",
+      "name": "Runway",
+      "url": "https://runwayml.com",
+      "category": "AI video",
+      "whatItIs": "AI video & creative tools",
+      "reachmarkUse": "Full-bleed cinematic hero and scroll-linked video storytelling",
+      "status": "ok",
+      "title": "Runway | Building Real-World Intelligence",
+      "themeColor": "#0C0C0C",
+      "favicon": "https://runway.com/icon.png?icon.35ps9bmugbe1e.png"
+    },
+    {
+      "slug": "leonardo-ai",
+      "name": "Leonardo AI",
+      "url": "https://leonardo.ai",
+      "category": "AI image",
+      "whatItIs": "AI image generation",
+      "reachmarkUse": "Gallery masonry + generation parameter panels",
+      "status": "blocked",
+      "title": "",
+      "themeColor": "",
+      "favicon": ""
+    },
+    {
+      "slug": "ideogram",
+      "name": "Ideogram",
+      "url": "https://ideogram.ai",
+      "category": "AI image",
+      "whatItIs": "Create images with strong text rendering",
+      "reachmarkUse": "Prompt bar interaction and overlay typography on imagery",
+      "status": "blocked",
+      "title": "",
+      "themeColor": "",
+      "favicon": ""
+    },
+    {
+      "slug": "suno",
+      "name": "Suno",
+      "url": "https://suno.com",
+      "category": "AI audio",
+      "whatItIs": "Generate AI music",
+      "reachmarkUse": "Sticky bottom player bar pattern (proof-reel previews)",
+      "status": "ok",
+      "title": "Suno | AI Music Generator",
+      "themeColor": "",
+      "favicon": "https://cdn-o.suno.com/favicon.ico"
+    },
+    {
+      "slug": "elevenlabs",
+      "name": "ElevenLabs",
+      "url": "https://elevenlabs.io",
+      "category": "AI audio",
+      "whatItIs": "AI voice generation",
+      "reachmarkUse": "Waveform + voice-card components for narration previews",
+      "status": "ok",
+      "title": "Free AI Voice Generator &amp; Voice Agents Platform | ElevenLabs",
+      "themeColor": "",
+      "favicon": "https://elevenlabs.io/favicon.ico?9c55860cee08706b"
+    },
+    {
+      "slug": "gamma",
+      "name": "Gamma",
+      "url": "https://gamma.app",
+      "category": "AI docs",
+      "whatItIs": "Create presentations with AI",
+      "reachmarkUse": "Block-based 'generate then edit' interaction model",
+      "status": "blocked",
+      "title": "",
+      "themeColor": "",
+      "favicon": ""
+    },
+    {
+      "slug": "napkin",
+      "name": "Napkin AI",
+      "url": "https://napkin.ai",
+      "category": "AI docs",
+      "whatItIs": "Turn ideas into visual diagrams",
+      "reachmarkUse": "Auto-diagram styling for the architecture pages",
+      "status": "ok",
+      "title": "Napkin AI - Turn Text into AI Diagrams and Visuals",
+      "themeColor": "",
+      "favicon": ""
+    },
+    {
+      "slug": "tldraw",
+      "name": "tldraw",
+      "url": "https://tldraw.com",
+      "category": "Canvas",
+      "whatItIs": "Collaborative online whiteboard",
+      "reachmarkUse": "Canvas cursors and infinite-board affordances",
+      "status": "ok",
+      "title": "tldraw \u2022 very good free whiteboard",
+      "themeColor": "#FFFFFF",
+      "favicon": "https://www.tldraw.com/favicon.svg"
+    },
+    {
+      "slug": "excalidraw",
+      "name": "Excalidraw",
+      "url": "https://excalidraw.com",
+      "category": "Canvas",
+      "whatItIs": "Simple hand-drawn style diagrams",
+      "reachmarkUse": "Hand-drawn diagram assets for docs and feature tours",
+      "status": "ok",
+      "title": "Excalidraw Whiteboard",
+      "themeColor": "#121212",
+      "favicon": "https://excalidraw.com/apple-touch-icon.png"
+    },
+    {
+      "slug": "drawio",
+      "name": "draw.io",
+      "url": "https://drawio.com",
+      "category": "Canvas",
+      "whatItIs": "Create diagrams & flowcharts",
+      "reachmarkUse": "Flowchart language for the escrow pipeline explainer",
+      "status": "ok",
+      "title": "Security-first diagramming for teams | draw.io",
+      "themeColor": "",
+      "favicon": "https://www.drawio.com/favicon.ico"
+    },
+    {
+      "slug": "penpot",
+      "name": "Penpot",
+      "url": "https://penpot.app",
+      "category": "Design",
+      "whatItIs": "Open-source design platform",
+      "reachmarkUse": "Design-token documentation page structure",
+      "status": "ok",
+      "title": "Penpot: The open-source design platform for teams.",
+      "themeColor": "",
+      "favicon": ""
+    },
+    {
+      "slug": "coolors",
+      "name": "Coolors",
+      "url": "https://coolors.co",
+      "category": "Design",
+      "whatItIs": "Generate color palettes",
+      "reachmarkUse": "Palette generator UI; source of the Reachmark accent ramp",
+      "status": "ok",
+      "title": "Coolors - The super fast color palettes generator!",
+      "themeColor": "",
+      "favicon": "https://coolors.co/assets/img/favicon.png"
+    },
+    {
+      "slug": "fontjoy",
+      "name": "Fontjoy",
+      "url": "https://fontjoy.com",
+      "category": "Design",
+      "whatItIs": "Find font combinations",
+      "reachmarkUse": "Justifies the Outfit + Plus Jakarta Sans pairing",
+      "status": "ok",
+      "title": "Fontjoy - Generate font pairings in one click",
+      "themeColor": "",
+      "favicon": "https://fontjoy.com/favicon32.gif"
+    },
+    {
+      "slug": "whatthefont",
+      "name": "WhatTheFont",
+      "url": "https://myfonts.com/WhatTheFont",
+      "category": "Design",
+      "whatItIs": "Identify fonts from images",
+      "reachmarkUse": "Reference for type-identification UI (upload + crop)",
+      "status": "ok",
+      "title": "WhatTheFont Font Finder - Identify Fonts by Image",
+      "themeColor": "",
+      "favicon": "https://www.myfonts.com/cdn/shop/files/MyFonts_Favicon_small.png?v=1717748062"
+    },
+    {
+      "slug": "favicon-io",
+      "name": "Favicon.io",
+      "url": "https://favicon.io",
+      "category": "Design assets",
+      "whatItIs": "Create favicons quickly",
+      "reachmarkUse": "Generated the Reachmark mark + favicon set",
+      "status": "ok",
+      "title": "The Best Free Favicon Generator - favicon.ico and App Icons - favicon.io",
+      "themeColor": "",
+      "favicon": "data:,"
+    },
+    {
+      "slug": "qr-code-generator",
+      "name": "QR Code Generator",
+      "url": "https://qr-code-generator.com",
+      "category": "Design assets",
+      "whatItIs": "Create QR codes",
+      "reachmarkUse": "QR handoff cards for verified account transfer",
+      "status": "ok",
+      "title": "QR Code Generator | Create Your Free QR Codes",
+      "themeColor": "",
+      "favicon": "https://media.qr-code-generator.com/wp-content/uploads/2026/04/20174334/favicon-qrcg-150x150.png"
+    },
+    {
+      "slug": "compressjpeg",
+      "name": "Compress JPEG",
+      "url": "https://compressjpeg.com",
+      "category": "Media utils",
+      "whatItIs": "Compress JPEG images",
+      "reachmarkUse": "Client-side image compression guidance for proof uploads",
+      "status": "ok",
+      "title": "Reduce JPEG File Size Online",
+      "themeColor": "",
+      "favicon": "https://compressjpeg.com/images/favicon.svg"
+    },
+    {
+      "slug": "tinypng",
+      "name": "TinyPNG",
+      "url": "https://tinypng.com",
+      "category": "Media utils",
+      "whatItIs": "Compress PNG & WebP images",
+      "reachmarkUse": "Drop-zone upload UX for the proof vault",
+      "status": "ok",
+      "title": "TinyPNG \u2013 Compress WebP, PNG and JPEG images intelligently",
+      "themeColor": "",
+      "favicon": "https://tinypng.com/images/favicon.ico"
+    },
+    {
+      "slug": "convertio",
+      "name": "Convertio",
+      "url": "https://convertio.co",
+      "category": "Media utils",
+      "whatItIs": "Convert files between formats",
+      "reachmarkUse": "Format-picker component for asset exports",
+      "status": "ok",
+      "title": "Convertio \u2014 File Converter",
+      "themeColor": "",
+      "favicon": "https://static.convertio.co/favicon.ico"
+    },
+    {
+      "slug": "cloudconvert",
+      "name": "CloudConvert",
+      "url": "https://cloudconvert.com",
+      "category": "Media utils",
+      "whatItIs": "Convert almost any file",
+      "reachmarkUse": "Conversion-job status timeline component",
+      "status": "ok",
+      "title": "File Converter | CloudConvert",
+      "themeColor": "",
+      "favicon": "https://cloudconvert.com/build/assets/favicon-144-Cew_0rgK.png"
+    },
+    {
+      "slug": "iloveimg",
+      "name": "iLoveIMG",
+      "url": "https://iloveimg.com",
+      "category": "Media utils",
+      "whatItIs": "Edit & optimize images",
+      "reachmarkUse": "Batch-processing UI pattern for bulk listing media",
+      "status": "ok",
+      "title": "iLoveIMG | The fastest free web app for easy image modification.",
+      "themeColor": "",
+      "favicon": "https://www.iloveimg.com/img/favicons-img/favicon-16x16.png"
+    },
+    {
+      "slug": "vectr",
+      "name": "Vectr",
+      "url": "https://vectr.com",
+      "category": "Design assets",
+      "whatItIs": "Create vector graphics online",
+      "reachmarkUse": "Inline SVG illustration system for empty states",
+      "status": "ok",
+      "title": "Vectr - AI Vector Graphics Editor and Logo Maker | Background Remover &amp; SVG Converter",
+      "themeColor": "",
+      "favicon": "https://vectr.com/favicon.ico"
+    },
+    {
+      "slug": "unsplash",
+      "name": "Unsplash",
+      "url": "https://unsplash.com",
+      "category": "Stock media",
+      "whatItIs": "Free high-quality photography",
+      "reachmarkUse": "Photography tone for editorial landing sections",
+      "status": "blocked",
+      "title": "",
+      "themeColor": "",
+      "favicon": ""
+    },
+    {
+      "slug": "pexels",
+      "name": "Pexels",
+      "url": "https://pexels.com",
+      "category": "Stock media",
+      "whatItIs": "Free stock photos & videos",
+      "reachmarkUse": "Creator-economy imagery for niche landing pages",
+      "status": "blocked",
+      "title": "",
+      "themeColor": "",
+      "favicon": ""
+    },
+    {
+      "slug": "pixabay",
+      "name": "Pixabay",
+      "url": "https://pixabay.com",
+      "category": "Stock media",
+      "whatItIs": "Free images, videos & illustrations",
+      "reachmarkUse": "Fallback art for platform category tiles",
+      "status": "blocked",
+      "title": "",
+      "themeColor": "",
+      "favicon": ""
+    },
+    {
+      "slug": "mixkit",
+      "name": "Mixkit",
+      "url": "https://mixkit.co",
+      "category": "Stock media",
+      "whatItIs": "Free stock videos, music & templates",
+      "reachmarkUse": "B-roll sources for auto-generated proof reels",
+      "status": "ok",
+      "title": "Mixkit - Awesome free assets for your next video project",
+      "themeColor": "",
+      "favicon": "https://assets.mixkit.co/build/favicons/apple-icon-72x72-65d8de4120b737fcccf4be0dd5e3604c7d0aa062eeb594876e4aac1f3aaf22a6.png"
+    },
+    {
+      "slug": "coverr",
+      "name": "Coverr",
+      "url": "https://coverr.co",
+      "category": "Stock media",
+      "whatItIs": "Free stock videos for creative projects",
+      "reachmarkUse": "Hero background clips for platform launch pages",
+      "status": "ok",
+      "title": "Download Free HD &amp; 4K Stock Videos, Music &amp; AI Tools",
+      "themeColor": "#171719",
+      "favicon": "https://coverr.co/apple-touch-icon.png"
+    },
+    {
+      "slug": "humaaans",
+      "name": "Humaaans",
+      "url": "https://humaaans.com",
+      "category": "Illustration",
+      "whatItIs": "Build customizable human illustrations",
+      "reachmarkUse": "Modular figure system for onboarding illustrations",
+      "status": "ok",
+      "title": "Humaaans: Mix-&amp;-Match illustration library",
+      "themeColor": "",
+      "favicon": ""
+    },
+    {
+      "slug": "undraw",
+      "name": "unDraw",
+      "url": "https://undraw.co",
+      "category": "Illustration",
+      "whatItIs": "Free customizable illustrations",
+      "reachmarkUse": "Recolorable SVG set for trust & escrow explainer art",
+      "status": "ok",
+      "title": "unDraw - Open source illustrations for any idea",
+      "themeColor": "#ffffff",
+      "favicon": "https://undraw.co/apple-touch-icon.png"
+    },
+    {
+      "slug": "storyset",
+      "name": "Storyset",
+      "url": "https://storyset.com",
+      "category": "Illustration",
+      "whatItIs": "Animated illustrations for projects",
+      "reachmarkUse": "Animated illustration reference for the motion layer",
+      "status": "ok",
+      "title": "Storyset | Customize, animate and download illustration for free",
+      "themeColor": "",
+      "favicon": "https://storyset.com/favicon.ico"
+    },
+    {
+      "slug": "sitemaps",
+      "name": "Sitemaps.org",
+      "url": "https://www.sitemaps.org",
+      "category": "Dev utilities",
+      "whatItIs": "Learn how sitemaps work",
+      "reachmarkUse": "Generated sitemap.xml + robots surface for the catalog",
+      "status": "ok",
+      "title": "sitemaps.org - Home",
+      "themeColor": "",
+      "favicon": ""
+    },
+    {
+      "slug": "regexr",
+      "name": "RegExr",
+      "url": "https://regexr.com",
+      "category": "Dev utilities",
+      "whatItIs": "Build & test regular expressions",
+      "reachmarkUse": "Validator regexes for username/handle proof fields",
+      "status": "ok",
+      "title": "RegExr: Learn, Build, &amp; Test RegEx",
+      "themeColor": "#70b0e0",
+      "favicon": "https://regexr.com/assets/icons/apple-touch-icon.png?1"
+    },
+    {
+      "slug": "jsonformatter",
+      "name": "JSON Formatter",
+      "url": "https://jsonformatter.org",
+      "category": "Dev utilities",
+      "whatItIs": "Format & validate JSON",
+      "reachmarkUse": "Harvest manifest inspector in the dev console route",
+      "status": "ok",
+      "title": "Best JSON Formatter and JSON Validator: Online JSON Formatter",
+      "themeColor": "",
+      "favicon": "https://jsonformatter.org/img/favicon.png"
+    },
+    {
+      "slug": "jwt-io",
+      "name": "JWT.io",
+      "url": "https://jwt.io",
+      "category": "Dev utilities",
+      "whatItIs": "Decode and inspect JWT tokens",
+      "reachmarkUse": "Session inspector card in the admin console",
+      "status": "ok",
+      "title": "JSON Web Tokens - jwt.io",
+      "themeColor": "#111111",
+      "favicon": "https://www.jwt.io/favicon.ico?d0c00b43c88ae22b"
+    },
+    {
+      "slug": "postman",
+      "name": "Postman",
+      "url": "https://postman.com",
+      "category": "API tooling",
+      "whatItIs": "Test & explore APIs",
+      "reachmarkUse": "API reference layout for the Reachmark public API page",
+      "status": "ok",
+      "title": "API engineering for your agents",
+      "themeColor": "#FF6C37",
+      "favicon": "https://www.postman.com/favicon.ico?favicon.2p_ec3wqr8j2b.ico"
+    },
+    {
+      "slug": "reqbin",
+      "name": "ReqBin",
+      "url": "https://reqbin.com",
+      "category": "API tooling",
+      "whatItIs": "Send HTTP requests online",
+      "reachmarkUse": "Request builder for the developer playground",
+      "status": "ok",
+      "title": "Online API Testing Tool | Test Your API Online",
+      "themeColor": "",
+      "favicon": "https://reqbin.com/static/favicon.ico"
+    },
+    {
+      "slug": "carbon",
+      "name": "Carbon",
+      "url": "https://carbon.now.sh",
+      "category": "Code media",
+      "whatItIs": "Create beautiful code screenshots",
+      "reachmarkUse": "Share-card generator for listing embeds",
+      "status": "ok",
+      "title": "Carbon | Create and share beautiful images of your source code",
+      "themeColor": "#121212",
+      "favicon": "https://carbon.now.sh/favicon.ico"
+    },
+    {
+      "slug": "ray-so",
+      "name": "Ray.so",
+      "url": "https://ray.so",
+      "category": "Code media",
+      "whatItIs": "Turn code into beautiful images",
+      "reachmarkUse": "Gradient-framed export cards for proof reels",
+      "status": "ok",
+      "title": "Create beautiful images of your code",
+      "themeColor": "#181818",
+      "favicon": "https://ray.so/favicon.ico?favicon.1hiy_i08_ftw4.ico"
+    },
+    {
+      "slug": "bundlephobia",
+      "name": "Bundlephobia",
+      "url": "https://bundlephobia.com",
+      "category": "Perf tooling",
+      "whatItIs": "Check JavaScript package sizes",
+      "reachmarkUse": "Budgets enforced in the web app build notes",
+      "status": "ok",
+      "title": "Bundlephobia | Size of npm dependencies",
+      "themeColor": "#212121",
+      "favicon": "https://bundlephobia.com/apple-touch-icon.png"
+    },
+    {
+      "slug": "roadmap-sh",
+      "name": "roadmap.sh",
+      "url": "https://roadmap.sh",
+      "category": "Learning",
+      "whatItIs": "Developer roadmaps & learning paths",
+      "reachmarkUse": "Node-graph roadmap renderer for the seller academy",
+      "status": "ok",
+      "title": "Developer Roadmaps - roadmap.sh",
+      "themeColor": "#848a9a",
+      "favicon": "https://roadmap.sh/manifest/apple-touch-icon.png"
+    },
+    {
+      "slug": "roadmap-sh-r",
+      "name": "roadmap.sh/r",
+      "url": "https://roadmap.sh/r",
+      "category": "Learning",
+      "whatItIs": "Explore career roadmaps",
+      "reachmarkUse": "Alternate roadmap entry layout with progress persistence",
+      "status": "ok",
+      "title": "Roadmaps",
+      "themeColor": "#848a9a",
+      "favicon": "https://roadmap.sh/manifest/apple-touch-icon.png"
+    },
+    {
+      "slug": "learn-anything",
+      "name": "Learn Anything",
+      "url": "https://learn-anything.xyz",
+      "category": "Learning",
+      "whatItIs": "Discover visual learning paths",
+      "reachmarkUse": "Graph-first navigation pattern for resource discovery",
+      "status": "ok",
+      "title": "Learn Anything",
+      "themeColor": "",
+      "favicon": "https://learn-anything.xyz/apple-touch-icon.png"
+    },
+    {
+      "slug": "learnxinyminutes",
+      "name": "Learn X in Y Minutes",
+      "url": "https://learnxinyminutes.com",
+      "category": "Learning",
+      "whatItIs": "Learn programming concepts quickly",
+      "reachmarkUse": "Dense reference-card typography for cheat sheets",
+      "status": "ok",
+      "title": "Learn X in Y Minutes: Scenic Programming Language Tours",
+      "themeColor": "",
+      "favicon": ""
+    },
+    {
+      "slug": "overapi",
+      "name": "OverAPI",
+      "url": "https://overapi.com",
+      "category": "Learning",
+      "whatItIs": "Cheat sheets for developers",
+      "reachmarkUse": "Multi-column cheat-sheet grid for platform policies",
+      "status": "ok",
+      "title": "OverAPI.com | Collecting all the cheat sheets",
+      "themeColor": "",
+      "favicon": "https://overapi.com/favicon.ico"
+    },
+    {
+      "slug": "stowaway",
+      "name": "Stowaway",
+      "url": "https://stowaway.live/?f=VRP92H6NV98",
+      "category": "Live data",
+      "whatItIs": "Explore aircraft & satellites flying over you in real time",
+      "reachmarkUse": "Real-time map + telemetry overlay for ops live view",
+      "status": "ok",
+      "title": "Stowaway \u2014 Live 3D flight tracking from the window seat",
+      "themeColor": "#f6f6f6",
+      "favicon": "https://stowaway.live/favicon.ico"
+    }
+  ],
+  "fingerprint": "2dbdc2a6ea3b78c8"
+}

@@ -1,0 +1,2335 @@
+{
+  "$schema": "harvest-schema.json#/definitions/repoManifest",
+  "generatedBy": "tools/claw/claw.py scan",
+  "generatedAt": "2026-10-06T20:23:23+00:00",
+  "repoCount": 4,
+  "presentCount": 4,
+  "totalFiles": 1084,
+  "totalBytes": 28677265,
+  "totalCodeLines": 231302,
+  "repos": [
+    {
+      "name": "AccountsBazaar",
+      "purpose": "Full-stack PERN social-account marketplace (prisma schema, chat, admin)",
+      "path": "/home/user/reachmark-logs/upstream/AccountsBazaar",
+      "present": true,
+      "files": 84,
+      "bytes": 1958451,
+      "codeLines": 16056,
+      "languages": {
+        ".md": 2,
+        ".js": 20,
+        ".html": 1,
+        ".json": 6,
+        ".jsx": 38,
+        ".css": 1,
+        ".prisma": 1
+      },
+      "topLevel": [
+        "README.md",
+        "client",
+        "server"
+      ],
+      "entrypoints": [
+        "client/src/main.jsx",
+        "server/inngest/index.js",
+        "server/prisma/schema.prisma",
+        "server/server.js"
+      ],
+      "dependencies": {
+        "client/package.json": {
+          "runtime": [
+            "@clerk/react",
+            "@reduxjs/toolkit",
+            "@tailwindcss/vite",
+            "axios",
+            "date-fns",
+            "lenis",
+            "lucide-react",
+            "react",
+            "react-dom",
+            "react-hot-toast",
+            "react-icons",
+            "react-redux",
+            "react-router-dom",
+            "tailwindcss"
+          ],
+          "dev": [
+            "@eslint/js",
+            "@types/react",
+            "@types/react-dom",
+            "@vitejs/plugin-react",
+            "eslint",
+            "eslint-plugin-react-hooks",
+            "eslint-plugin-react-refresh",
+            "globals",
+            "vite"
+          ]
+        },
+        "server/package.json": {
+          "runtime": [
+            "@clerk/express",
+            "@imagekit/nodejs",
+            "@neondatabase/serverless",
+            "@prisma/adapter-neon",
+            "@prisma/client",
+            "cors",
+            "dotenv",
+            "express",
+            "inngest",
+            "multer",
+            "nodemailer",
+            "prisma",
+            "stripe",
+            "ws"
+          ],
+          "dev": [
+            "@types/ws",
+            "nodemon",
+            "tsx"
+          ]
+        }
+      },
+      "extracted": {
+        "prismaModels": [
+          {
+            "name": "User",
+            "fieldCount": 12,
+            "fields": [
+              {
+                "name": "id",
+                "type": "String",
+                "attributes": "@id"
+              },
+              {
+                "name": "email",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "name",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "image",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "earned",
+                "type": "Float",
+                "attributes": "@default(0)"
+              },
+              {
+                "name": "withdrawn",
+                "type": "Float",
+                "attributes": "@default(0)"
+              },
+              {
+                "name": "createdAt",
+                "type": "DateTime",
+                "attributes": "@default(now())"
+              },
+              {
+                "name": "updatedAt",
+                "type": "DateTime",
+                "attributes": "@updatedAt"
+              },
+              {
+                "name": "Listing",
+                "type": "Listing[]",
+                "attributes": ""
+              },
+              {
+                "name": "ownerChats",
+                "type": "Chat[]",
+                "attributes": "@relation(\"OwnerChats\")"
+              },
+              {
+                "name": "chatUserChats",
+                "type": "Chat[]",
+                "attributes": "@relation(\"ChatUserChats\")"
+              },
+              {
+                "name": "withdrawals",
+                "type": "Withdrawal[]",
+                "attributes": ""
+              }
+            ]
+          },
+          {
+            "name": "Listing",
+            "fieldCount": 27,
+            "fields": [
+              {
+                "name": "id",
+                "type": "String",
+                "attributes": "@id @default(uuid())"
+              },
+              {
+                "name": "ownerId",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "title",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "platform",
+                "type": "Platform",
+                "attributes": ""
+              },
+              {
+                "name": "username",
+                "type": "String?",
+                "attributes": ""
+              },
+              {
+                "name": "followers_count",
+                "type": "Float",
+                "attributes": ""
+              },
+              {
+                "name": "engagement_rate",
+                "type": "Float?",
+                "attributes": ""
+              },
+              {
+                "name": "monthly_views",
+                "type": "Float?",
+                "attributes": ""
+              },
+              {
+                "name": "niche",
+                "type": "Niche",
+                "attributes": ""
+              },
+              {
+                "name": "price",
+                "type": "Float",
+                "attributes": ""
+              },
+              {
+                "name": "description",
+                "type": "String?",
+                "attributes": ""
+              },
+              {
+                "name": "verified",
+                "type": "Boolean",
+                "attributes": "@default(false)"
+              },
+              {
+                "name": "monetized",
+                "type": "Boolean",
+                "attributes": "@default(false)"
+              },
+              {
+                "name": "country",
+                "type": "String?",
+                "attributes": ""
+              },
+              {
+                "name": "age_range",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "status",
+                "type": "Status",
+                "attributes": "@default(active)"
+              },
+              {
+                "name": "featured",
+                "type": "Boolean",
+                "attributes": "@default(false)"
+              },
+              {
+                "name": "images",
+                "type": "String[]",
+                "attributes": ""
+              },
+              {
+                "name": "createdAt",
+                "type": "DateTime",
+                "attributes": "@default(now())"
+              },
+              {
+                "name": "updatedAt",
+                "type": "DateTime",
+                "attributes": "@updatedAt"
+              },
+              {
+                "name": "platformAssured",
+                "type": "Boolean",
+                "attributes": "@default(false)"
+              },
+              {
+                "name": "isCredentialSubmitted",
+                "type": "Boolean",
+                "attributes": "@default(false)"
+              },
+              {
+                "name": "isCredentialVerified",
+                "type": "Boolean",
+                "attributes": "@default(false)"
+              },
+              {
+                "name": "isCredentialChanged",
+                "type": "Boolean",
+                "attributes": "@default(false)"
+              },
+              {
+                "name": "owner",
+                "type": "User",
+                "attributes": "@relation(fields: [ownerId], references: [id])"
+              },
+              {
+                "name": "chats",
+                "type": "Chat[]",
+                "attributes": ""
+              },
+              {
+                "name": "transactions",
+                "type": "Transaction[]",
+                "attributes": ""
+              }
+            ]
+          },
+          {
+            "name": "Chat",
+            "fieldCount": 16,
+            "fields": [
+              {
+                "name": "id",
+                "type": "String",
+                "attributes": "@id @default(uuid())"
+              },
+              {
+                "name": "chatUserId",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "ownerUserId",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "listingId",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "messages",
+                "type": "Message[]",
+                "attributes": ""
+              },
+              {
+                "name": "platformMessages",
+                "type": "PlatformMessage[]",
+                "attributes": ""
+              },
+              {
+                "name": "createdAt",
+                "type": "DateTime",
+                "attributes": "@default(now())"
+              },
+              {
+                "name": "updatedAt",
+                "type": "DateTime",
+                "attributes": "@updatedAt"
+              },
+              {
+                "name": "active",
+                "type": "Boolean",
+                "attributes": "@default(true)"
+              },
+              {
+                "name": "lastMessage",
+                "type": "String",
+                "attributes": "@default(\"\")"
+              },
+              {
+                "name": "isLastMessageRead",
+                "type": "Boolean",
+                "attributes": "@default(true)"
+              },
+              {
+                "name": "lastMessageSenderId",
+                "type": "String",
+                "attributes": "@default(\"\")"
+              },
+              {
+                "name": "isTokenAmountPaid",
+                "type": "Boolean",
+                "attributes": "@default(false)"
+              },
+              {
+                "name": "ownerUser",
+                "type": "User",
+                "attributes": "@relation(\"OwnerChats\", fields: [ownerUserId], references: [id])"
+              },
+              {
+                "name": "chatUser",
+                "type": "User",
+                "attributes": "@relation(\"ChatUserChats\", fields: [chatUserId], references: [id])"
+              },
+              {
+                "name": "listing",
+                "type": "Listing",
+                "attributes": "@relation(fields: [listingId], references: [id])"
+              }
+            ]
+          },
+          {
+            "name": "Message",
+            "fieldCount": 6,
+            "fields": [
+              {
+                "name": "id",
+                "type": "String",
+                "attributes": "@id @default(uuid())"
+              },
+              {
+                "name": "chatId",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "message",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "sender_id",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "createdAt",
+                "type": "DateTime",
+                "attributes": "@default(now())"
+              },
+              {
+                "name": "chat",
+                "type": "Chat",
+                "attributes": "@relation(fields: [chatId], references: [id])"
+              }
+            ]
+          },
+          {
+            "name": "PlatformMessage",
+            "fieldCount": 6,
+            "fields": [
+              {
+                "name": "id",
+                "type": "String",
+                "attributes": "@id @default(uuid())"
+              },
+              {
+                "name": "chatId",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "message",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "sender_id",
+                "type": "String",
+                "attributes": "@default(\"platform\")"
+              },
+              {
+                "name": "createdAt",
+                "type": "DateTime",
+                "attributes": "@default(now())"
+              },
+              {
+                "name": "chat",
+                "type": "Chat",
+                "attributes": "@relation(fields: [chatId], references: [id])"
+              }
+            ]
+          },
+          {
+            "name": "Credential",
+            "fieldCount": 5,
+            "fields": [
+              {
+                "name": "id",
+                "type": "String",
+                "attributes": "@id @default(uuid())"
+              },
+              {
+                "name": "listingId",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "originalCredential",
+                "type": "Json[]",
+                "attributes": "@default([])"
+              },
+              {
+                "name": "updatedCredential",
+                "type": "Json[]",
+                "attributes": "@default([])"
+              },
+              {
+                "name": "createdAt",
+                "type": "DateTime",
+                "attributes": "@default(now())"
+              }
+            ]
+          },
+          {
+            "name": "Transaction",
+            "fieldCount": 8,
+            "fields": [
+              {
+                "name": "id",
+                "type": "String",
+                "attributes": "@id @default(uuid())"
+              },
+              {
+                "name": "listingId",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "ownerId",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "userId",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "amount",
+                "type": "Float",
+                "attributes": ""
+              },
+              {
+                "name": "isPaid",
+                "type": "Boolean",
+                "attributes": "@default(false)"
+              },
+              {
+                "name": "createdAt",
+                "type": "DateTime",
+                "attributes": "@default(now())"
+              },
+              {
+                "name": "listing",
+                "type": "Listing",
+                "attributes": "@relation(fields: [listingId], references: [id])"
+              }
+            ]
+          },
+          {
+            "name": "Withdrawal",
+            "fieldCount": 8,
+            "fields": [
+              {
+                "name": "id",
+                "type": "String",
+                "attributes": "@id @default(uuid())"
+              },
+              {
+                "name": "userId",
+                "type": "String",
+                "attributes": ""
+              },
+              {
+                "name": "amount",
+                "type": "Float",
+                "attributes": ""
+              },
+              {
+                "name": "account",
+                "type": "Json[]",
+                "attributes": ""
+              },
+              {
+                "name": "isWithdrawn",
+                "type": "Boolean",
+                "attributes": "@default(false)"
+              },
+              {
+                "name": "createdAt",
+                "type": "DateTime",
+                "attributes": "@default(now())"
+              },
+              {
+                "name": "updatedAt",
+                "type": "DateTime",
+                "attributes": "@updatedAt"
+              },
+              {
+                "name": "user",
+                "type": "User",
+                "attributes": "@relation(fields: [userId], references: [id])"
+              }
+            ]
+          }
+        ],
+        "modelNames": [
+          "User",
+          "Listing",
+          "Chat",
+          "Message",
+          "PlatformMessage",
+          "Credential",
+          "Transaction",
+          "Withdrawal"
+        ],
+        "designTokens": {
+          "cssVariables": {},
+          "classes": [
+            "cl-drawerRoot",
+            "font-heading",
+            "glass-card",
+            "glass-panel",
+            "gradient-text",
+            "no-scrollbar"
+          ],
+          "keyframes": [],
+          "fonts": [
+            "Outfit",
+            "Plus Jakarta Sans"
+          ],
+          "mediaQueries": 0
+        },
+        "components": [
+          {
+            "name": "ManageListing",
+            "path": "client/src/pages/ManageListing.jsx",
+            "lines": 505,
+            "kind": "listing",
+            "exports": [
+              "CheckboxField",
+              "InputField",
+              "ManageListing",
+              "Section",
+              "SelectField",
+              "TextareaField",
+              "handleInputChange",
+              "removeImage"
+            ]
+          },
+          {
+            "name": "assets",
+            "path": "client/src/assets/assets.jsx",
+            "lines": 399,
+            "kind": "general",
+            "exports": [
+              "assets",
+              "dummyChats",
+              "dummyListings",
+              "dummyMessages",
+              "dummyOrders",
+              "dummyUsers",
+              "dummyWithdrawalRequests",
+              "getProfileLink"
+            ]
+          },
+          {
+            "name": "ListingDetails",
+            "path": "client/src/pages/ListingDetails.jsx",
+            "lines": 368,
+            "kind": "listing",
+            "exports": [
+              "ListingDetails",
+              "loadChatbox",
+              "nextSlide",
+              "prevSlide"
+            ]
+          },
+          {
+            "name": "MyListings",
+            "path": "client/src/pages/MyListings.jsx",
+            "lines": 341,
+            "kind": "listing",
+            "exports": [
+              "MyListings",
+              "formatNumber",
+              "getStatusColor",
+              "getStatusIcon"
+            ]
+          },
+          {
+            "name": "FilterSidebar",
+            "path": "client/src/components/FilterSidebar.jsx",
+            "lines": 288,
+            "kind": "filter",
+            "exports": [
+              "FilterSidebar",
+              "onClearFilters",
+              "onFiltersChange",
+              "onSearchChange",
+              "toggleSection"
+            ]
+          },
+          {
+            "name": "Marketplace",
+            "path": "client/src/pages/Marketplace.jsx",
+            "lines": 229,
+            "kind": "general",
+            "exports": [
+              "Marketplace"
+            ]
+          },
+          {
+            "name": "MyOrders",
+            "path": "client/src/pages/MyOrders.jsx",
+            "lines": 210,
+            "kind": "general",
+            "exports": [
+              "MyOrders",
+              "mask"
+            ]
+          },
+          {
+            "name": "Chatbox",
+            "path": "client/src/components/Chatbox.jsx",
+            "lines": 193,
+            "kind": "chat",
+            "exports": [
+              "Chatbox"
+            ]
+          },
+          {
+            "name": "Navbar",
+            "path": "client/src/components/Navbar.jsx",
+            "lines": 188,
+            "kind": "navbar",
+            "exports": [
+              "Navbar",
+              "isActive"
+            ]
+          },
+          {
+            "name": "Messages",
+            "path": "client/src/pages/Messages.jsx",
+            "lines": 153,
+            "kind": "general",
+            "exports": [
+              "Messages",
+              "formatTime",
+              "handleOpenChat"
+            ]
+          },
+          {
+            "name": "Hero",
+            "path": "client/src/components/Hero.jsx",
+            "lines": 137,
+            "kind": "hero",
+            "exports": [
+              "Hero",
+              "onSubmitHandler"
+            ]
+          },
+          {
+            "name": "ListingDetailsModal",
+            "path": "client/src/components/admin/ListingDetailsModal.jsx",
+            "lines": 133,
+            "kind": "admin",
+            "exports": [
+              "ListingDetailsModal"
+            ]
+          },
+          {
+            "name": "CredentialVerifyModal",
+            "path": "client/src/components/admin/CredentialVerifyModal.jsx",
+            "lines": 126,
+            "kind": "admin",
+            "exports": [
+              "CredentialVerifyModal",
+              "copyToClipboard"
+            ]
+          },
+          {
+            "name": "AllListings",
+            "path": "client/src/pages/admin/AllListings.jsx",
+            "lines": 126,
+            "kind": "admin",
+            "exports": [
+              "AllListings"
+            ]
+          },
+          {
+            "name": "CredentialChangeModal",
+            "path": "client/src/components/admin/CredentialChangeModal.jsx",
+            "lines": 122,
+            "kind": "admin",
+            "exports": [
+              "CredentialChangeModal",
+              "copyToClipboard"
+            ]
+          },
+          {
+            "name": "App",
+            "path": "client/src/App.jsx",
+            "lines": 118,
+            "kind": "general",
+            "exports": [
+              "App"
+            ]
+          },
+          {
+            "name": "ListingCard",
+            "path": "client/src/components/ListingCard.jsx",
+            "lines": 117,
+            "kind": "listing",
+            "exports": [
+              "ListingCard"
+            ]
+          },
+          {
+            "name": "Dashboard",
+            "path": "client/src/pages/admin/Dashboard.jsx",
+            "lines": 111,
+            "kind": "admin",
+            "exports": [
+              "Dashboard"
+            ]
+          },
+          {
+            "name": "Footer",
+            "path": "client/src/components/Footer.jsx",
+            "lines": 107,
+            "kind": "footer",
+            "exports": [
+              "Footer",
+              "scrollToTop"
+            ]
+          },
+          {
+            "name": "WithdrawalDetail",
+            "path": "client/src/components/admin/WithdrawalDetail.jsx",
+            "lines": 107,
+            "kind": "admin",
+            "exports": [
+              "WithdrawalDetail",
+              "copyToClipboard"
+            ]
+          },
+          {
+            "name": "CredentialSubmission",
+            "path": "client/src/components/CredentialSubmission.jsx",
+            "lines": 104,
+            "kind": "credential",
+            "exports": [
+              "CredentialSubmission",
+              "handleAddField"
+            ]
+          },
+          {
+            "name": "Withdrawal",
+            "path": "client/src/pages/admin/Withdrawal.jsx",
+            "lines": 102,
+            "kind": "admin",
+            "exports": [
+              "Withdrawal"
+            ]
+          },
+          {
+            "name": "CredentialVerify",
+            "path": "client/src/pages/admin/CredentialVerify.jsx",
+            "lines": 97,
+            "kind": "admin",
+            "exports": [
+              "CredentialVerify"
+            ]
+          },
+          {
+            "name": "CredentialChange",
+            "path": "client/src/pages/admin/CredentialChange.jsx",
+            "lines": 96,
+            "kind": "admin",
+            "exports": [
+              "CredentialChange"
+            ]
+          },
+          {
+            "name": "WithdrawModal",
+            "path": "client/src/components/WithdrawModal.jsx",
+            "lines": 93,
+            "kind": "withdraw",
+            "exports": [
+              "WithdrawModal"
+            ]
+          },
+          {
+            "name": "Transactions",
+            "path": "client/src/pages/admin/Transactions.jsx",
+            "lines": 86,
+            "kind": "admin",
+            "exports": [
+              "Transactions"
+            ]
+          },
+          {
+            "name": "Layout",
+            "path": "client/src/pages/admin/Layout.jsx",
+            "lines": 76,
+            "kind": "admin",
+            "exports": [
+              "Layout"
+            ]
+          },
+          {
+            "name": "Plans",
+            "path": "client/src/components/Plans.jsx",
+            "lines": 73,
+            "kind": "plans",
+            "exports": [
+              "Plans"
+            ]
+          },
+          {
+            "name": "LatestListings",
+            "path": "client/src/components/LatestListings.jsx",
+            "lines": 61,
+            "kind": "listing",
+            "exports": [
+              "LatestListings"
+            ]
+          },
+          {
+            "name": "CTA",
+            "path": "client/src/components/CTA.jsx",
+            "lines": 56,
+            "kind": "general",
+            "exports": [
+              "CTA"
+            ]
+          },
+          {
+            "name": "AdminSidebar",
+            "path": "client/src/components/admin/AdminSidebar.jsx",
+            "lines": 40,
+            "kind": "admin",
+            "exports": [
+              "AdminSidebar"
+            ]
+          },
+          {
+            "name": "StatCard",
+            "path": "client/src/components/StatCard.jsx",
+            "lines": 27,
+            "kind": "card",
+            "exports": [
+              "StatCard"
+            ]
+          },
+          {
+            "name": "main",
+            "path": "client/src/main.jsx",
+            "lines": 24,
+            "kind": "general",
+            "exports": []
+          },
+          {
+            "name": "Loading",
+            "path": "client/src/pages/Loading.jsx",
+            "lines": 24,
+            "kind": "general",
+            "exports": [
+              "Loading"
+            ]
+          },
+          {
+            "name": "Home",
+            "path": "client/src/pages/Home.jsx",
+            "lines": 22,
+            "kind": "general",
+            "exports": [
+              "Home"
+            ]
+          },
+          {
+            "name": "AdminNavbar",
+            "path": "client/src/components/admin/AdminNavbar.jsx",
+            "lines": 16,
+            "kind": "admin",
+            "exports": [
+              "AdminNavbar"
+            ]
+          },
+          {
+            "name": "Title",
+            "path": "client/src/components/Title.jsx",
+            "lines": 15,
+            "kind": "general",
+            "exports": [
+              "Title"
+            ]
+          },
+          {
+            "name": "AdminTitle",
+            "path": "client/src/components/admin/AdminTitle.jsx",
+            "lines": 9,
+            "kind": "admin",
+            "exports": [
+              "AdminTitle"
+            ]
+          }
+        ],
+        "features": {
+          "pages": [
+            "client/src/pages/Home.jsx",
+            "client/src/pages/ListingDetails.jsx",
+            "client/src/pages/Loading.jsx",
+            "client/src/pages/ManageListing.jsx",
+            "client/src/pages/Marketplace.jsx",
+            "client/src/pages/Messages.jsx",
+            "client/src/pages/MyListings.jsx",
+            "client/src/pages/MyOrders.jsx",
+            "client/src/pages/admin/AllListings.jsx",
+            "client/src/pages/admin/CredentialChange.jsx",
+            "client/src/pages/admin/CredentialVerify.jsx",
+            "client/src/pages/admin/Dashboard.jsx",
+            "client/src/pages/admin/Layout.jsx",
+            "client/src/pages/admin/Transactions.jsx",
+            "client/src/pages/admin/Withdrawal.jsx"
+          ],
+          "controllers": [
+            "server/controllers/adminController.js",
+            "server/controllers/chatController.js",
+            "server/controllers/listingController.js",
+            "server/controllers/stripeWebhook.js"
+          ],
+          "routes": [
+            "server/routes/adminRoutes.js",
+            "server/routes/chatRoutes.js",
+            "server/routes/listingRoutes.js"
+          ]
+        }
+      },
+      "harvestedAt": "2026-10-06T20:23:23+00:00"
+    },
+    {
+      "name": "ui-builder",
+      "purpose": "OpenZeppelin UI Builder (shadcn/tailwind design system, wizard + form engine)",
+      "path": "/home/user/reachmark-logs/upstream/ui-builder",
+      "present": true,
+      "files": 536,
+      "bytes": 11614224,
+      "codeLines": 57197,
+      "languages": {
+        ".json": 21,
+        ".md": 129,
+        ".js": 3,
+        ".yml": 2,
+        ".yaml": 2,
+        ".ts": 195,
+        ".html": 2,
+        ".tsx": 87,
+        ".css": 3
+      },
+      "topLevel": [
+        "AGENTS.md",
+        "CHANGELOG.md",
+        "CODEOWNERS",
+        "CODE_OF_CONDUCT.md",
+        "COMMIT_CONVENTION.md",
+        "CONTRIBUTING.md",
+        "Dockerfile",
+        "LICENSE",
+        "README.md",
+        "SECURITY.md",
+        "apps",
+        "badges",
+        "builder.config.json",
+        "commitlint.config.js",
+        "components.json",
+        "docker-compose.yml",
+        "docs",
+        "eslint.config.cjs",
+        "pack.json",
+        "package.json",
+        "patches",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "postcss.config.cjs",
+        "renovate.json",
+        "scripts",
+        "specs",
+        "tailwind.config.cjs",
+        "test",
+        "tsconfig.base.json",
+        "tsconfig.eslint.json",
+        "tsconfig.json",
+        "tsconfig.node.json",
+        "vitest.scripts.config.ts",
+        "vitest.shared.config.ts"
+      ],
+      "entrypoints": [],
+      "dependencies": {
+        "package.json": {
+          "runtime": [
+            "jszip"
+          ],
+          "dev": [
+            "@commitlint/cli",
+            "@commitlint/config-conventional",
+            "@commitlint/cz-commitlint",
+            "@ianvs/prettier-plugin-sort-imports",
+            "@openzeppelin/docs-utils",
+            "@openzeppelin/ui-dev-cli",
+            "@tailwindcss/postcss",
+            "@testing-library/jest-dom",
+            "@testing-library/react",
+            "@types/node",
+            "@types/react",
+            "@typescript-eslint/eslint-plugin",
+            "@typescript-eslint/parser",
+            "@vitejs/plugin-react",
+            "@vitest/coverage-v8",
+            "commitizen",
+            "eslint-plugin-import",
+            "eslint-plugin-jsdoc",
+            "eslint-plugin-unused-imports",
+            "happy-dom",
+            "husky",
+            "lint-staged",
+            "prettier",
+            "prettier-plugin-tailwindcss",
+            "tsup",
+            "vite",
+            "vitest"
+          ]
+        },
+        "docs/package.json": {
+          "runtime": [],
+          "dev": [
+            "@openzeppelin/docs-utils"
+          ]
+        },
+        "apps/builder/package.json": {
+          "runtime": [
+            "@creit.tech/stellar-wallets-kit",
+            "@hookform/resolvers",
+            "@icons-pack/react-simple-icons",
+            "@openzeppelin/adapter-evm",
+            "@openzeppelin/adapter-midnight",
+            "@openzeppelin/adapter-polkadot",
+            "@openzeppelin/adapter-solana",
+            "@openzeppelin/adapter-stellar",
+            "@openzeppelin/ui-components",
+            "@openzeppelin/ui-react",
+            "@openzeppelin/ui-renderer",
+            "@openzeppelin/ui-storage",
+            "@openzeppelin/ui-styles",
+            "@openzeppelin/ui-types",
+            "@openzeppelin/ui-utils",
+            "@radix-ui/react-accordion",
+            "@radix-ui/react-checkbox",
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-label",
+            "@radix-ui/react-popover",
+            "@radix-ui/react-select",
+            "@radix-ui/react-slot",
+            "@radix-ui/react-tabs",
+            "@radix-ui/react-toast",
+            "@radix-ui/react-tooltip",
+            "@rainbow-me/rainbowkit",
+            "@solana/web3.js",
+            "@stellar/stellar-sdk",
+            "@tanstack/react-query",
+            "@types/jszip",
+            "@uiw/react-textarea-code-editor",
+            "@wagmi/core",
+            "@web3icons/react",
+            "buffer",
+            "class-variance-authority",
+            "clsx",
+            "fast-equals",
+            "jszip",
+            "lodash-es",
+            "lucide-react",
+            "react",
+            "react-dom",
+            "react-hook-form",
+            "sonner",
+            "tailwind-merge",
+            "tailwindcss-animate",
+            "use-deep-compare-effect",
+            "viem",
+            "wagmi",
+            "zod",
+            "zustand"
+          ],
+          "dev": [
+            "@midnight-ntwrk/compact-runtime",
+            "@midnight-ntwrk/ledger",
+            "@midnight-ntwrk/midnight-js-contracts",
+            "@midnight-ntwrk/midnight-js-network-id",
+            "@midnight-ntwrk/midnight-js-types",
+            "@midnight-ntwrk/midnight-js-utils",
+            "@midnight-ntwrk/zswap",
+            "@openzeppelin/adapters-vite",
+            "@tailwindcss/vite",
+            "@testing-library/jest-dom",
+            "@testing-library/react",
+            "@testing-library/user-event",
+            "@types/ga-gtag",
+            "@types/lodash-es",
+            "@types/react",
+            "@types/react-dom",
+            "@typescript-eslint/eslint-plugin",
+            "@typescript-eslint/parser",
+            "@vitejs/plugin-react",
+            "@vitest/coverage-v8",
+            "dexie",
+            "eslint",
+            "eslint-config-prettier",
+            "eslint-import-resolver-typescript",
+            "eslint-plugin-import",
+            "eslint-plugin-prettier",
+            "eslint-plugin-react",
+            "eslint-plugin-react-hooks",
+            "eslint-plugin-react-refresh",
+            "eslint-plugin-simple-import-sort",
+            "jsdom",
+            "prettier",
+            "prettier-plugin-tailwindcss",
+            "tailwindcss",
+            "typescript",
+            "vite",
+            "vite-plugin-top-level-await",
+            "vite-plugin-wasm",
+            "vitest"
+          ]
+        },
+        "apps/builder/src/export/templates/typescript-react-vite/package.json": {
+          "runtime": [
+            "@openzeppelin/ui-components",
+            "@openzeppelin/ui-react",
+            "@openzeppelin/ui-renderer",
+            "@openzeppelin/ui-types",
+            "@openzeppelin/ui-utils",
+            "react",
+            "react-dom",
+            "react-hook-form"
+          ],
+          "dev": [
+            "@tailwindcss/vite",
+            "@types/react",
+            "@types/react-dom",
+            "@typescript-eslint/eslint-plugin",
+            "@typescript-eslint/parser",
+            "@vitejs/plugin-react",
+            "eslint",
+            "eslint-plugin-react-hooks",
+            "eslint-plugin-react-refresh",
+            "tailwindcss",
+            "typescript",
+            "vite"
+          ]
+        }
+      },
+      "extracted": {
+        "designTokens": {
+          "cssVariables": {},
+          "classes": [
+            "app",
+            "container",
+            "footer",
+            "form-example",
+            "form-field",
+            "header",
+            "main"
+          ],
+          "keyframes": [],
+          "fonts": [],
+          "mediaQueries": 0
+        },
+        "components": [
+          {
+            "name": "index",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/index.tsx",
+            "lines": 392,
+            "kind": "step",
+            "exports": [
+              "StepFormCustomization",
+              "handleTogglePreview",
+              "handleUiKitConfigUpdate"
+            ]
+          },
+          {
+            "name": "FieldEditor",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/FieldEditor.tsx",
+            "lines": 383,
+            "kind": "field",
+            "exports": [
+              "FieldEditor"
+            ]
+          },
+          {
+            "name": "index",
+            "path": "apps/builder/src/components/UIBuilder/index.tsx",
+            "lines": 318,
+            "kind": "general",
+            "exports": [
+              "UIBuilder",
+              "handleNetworkSelection",
+              "handleNetworkSwitchComplete"
+            ]
+          },
+          {
+            "name": "ContractDefinitionComparisonModal",
+            "path": "apps/builder/src/components/warnings/ContractDefinitionComparisonModal.tsx",
+            "lines": 254,
+            "kind": "modal",
+            "exports": [
+              "ContractDefinitionComparisonModal",
+              "getChangeColor",
+              "getChangeIcon",
+              "getImpactColor",
+              "getSeverityColor"
+            ]
+          },
+          {
+            "name": "UiKitSettings",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/UiKitSettings.tsx",
+            "lines": 243,
+            "kind": "step",
+            "exports": [
+              "UiKitSettings"
+            ]
+          },
+          {
+            "name": "FieldBasicSettings",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/FieldBasicSettings.tsx",
+            "lines": 242,
+            "kind": "field",
+            "exports": [
+              "FieldBasicSettings"
+            ]
+          },
+          {
+            "name": "NetworkSelectionPanel",
+            "path": "apps/builder/src/components/UIBuilder/StepChainSelection/components/NetworkSelectionPanel.tsx",
+            "lines": 236,
+            "kind": "step",
+            "exports": [
+              "NetworkSelectionPanel",
+              "handleCloseNetworkSettings",
+              "handleOpenNetworkSettings"
+            ]
+          },
+          {
+            "name": "ChainSelector",
+            "path": "apps/builder/src/components/UIBuilder/StepChainSelection/components/ChainSelector.tsx",
+            "lines": 233,
+            "kind": "step",
+            "exports": [
+              "ChainSelector"
+            ]
+          },
+          {
+            "name": "ContractSuccessStatus",
+            "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/components/ContractSuccessStatus.tsx",
+            "lines": 221,
+            "kind": "step",
+            "exports": [
+              "ContractSuccessStatus"
+            ]
+          },
+          {
+            "name": "StepContractDefinition",
+            "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/StepContractDefinition.tsx",
+            "lines": 219,
+            "kind": "step",
+            "exports": [
+              "StepContractDefinition"
+            ]
+          },
+          {
+            "name": "form-component.template",
+            "path": "apps/builder/src/export/codeTemplates/form-component.template.tsx",
+            "lines": 212,
+            "kind": "export",
+            "exports": [
+              "GeneratedForm",
+              "toBuilderAdapter",
+              "toggleWidget"
+            ]
+          },
+          {
+            "name": "ContractDefinitionMismatchWarning",
+            "path": "apps/builder/src/components/warnings/ContractDefinitionMismatchWarning.tsx",
+            "lines": 203,
+            "kind": "general",
+            "exports": [
+              "ContractDefinitionMismatchWarning"
+            ]
+          },
+          {
+            "name": "OptionSelector",
+            "path": "apps/builder/src/components/Common/OptionSelector.tsx",
+            "lines": 193,
+            "kind": "general",
+            "exports": [
+              "OptionSelector"
+            ]
+          },
+          {
+            "name": "UiKitSettings.test",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/__tests__/UiKitSettings.test.tsx",
+            "lines": 191,
+            "kind": "step",
+            "exports": []
+          },
+          {
+            "name": "manualAbiLoad.test",
+            "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/__tests__/manualAbiLoad.test.tsx",
+            "lines": 178,
+            "kind": "step",
+            "exports": []
+          },
+          {
+            "name": "ResponsiveUiKitSelector",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/ResponsiveUiKitSelector.tsx",
+            "lines": 174,
+            "kind": "step",
+            "exports": [
+              "ResponsiveUiKitSelector"
+            ]
+          },
+          {
+            "name": "ResponsiveExecutionMethodSelector",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/ResponsiveExecutionMethodSelector.tsx",
+            "lines": 172,
+            "kind": "step",
+            "exports": [
+              "ResponsiveExecutionMethodSelector"
+            ]
+          },
+          {
+            "name": "index",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RelayerConfiguration/index.tsx",
+            "lines": 170,
+            "kind": "step",
+            "exports": [
+              "RelayerConfiguration",
+              "handleFetchRelayers"
+            ]
+          },
+          {
+            "name": "WizardLayout",
+            "path": "apps/builder/src/components/Common/WizardLayout.tsx",
+            "lines": 169,
+            "kind": "wizard",
+            "exports": [
+              "WizardLayout",
+              "handleNext",
+              "handlePrevious"
+            ]
+          },
+          {
+            "name": "main.template",
+            "path": "apps/builder/src/export/codeTemplates/main.template.tsx",
+            "lines": 167,
+            "kind": "export",
+            "exports": [
+              "getNetworkConfigById"
+            ]
+          },
+          {
+            "name": "GeneralSettings",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/GeneralSettings.tsx",
+            "lines": 159,
+            "kind": "step",
+            "exports": [
+              "GeneralSettings"
+            ]
+          },
+          {
+            "name": "ProxyStatusIndicator",
+            "path": "apps/builder/src/components/warnings/ProxyStatusIndicator.tsx",
+            "lines": 156,
+            "kind": "general",
+            "exports": [
+              "ProxyStatusIndicator"
+            ]
+          },
+          {
+            "name": "ContractUIItem",
+            "path": "apps/builder/src/components/Sidebar/ContractUIs/ContractUIItem.tsx",
+            "lines": 155,
+            "kind": "sidebar",
+            "exports": [
+              "ContractUIItem"
+            ]
+          },
+          {
+            "name": "deepLinkDedupe.test",
+            "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/__tests__/deepLinkDedupe.test.tsx",
+            "lines": 152,
+            "kind": "step",
+            "exports": []
+          },
+          {
+            "name": "ChainSelector.test",
+            "path": "apps/builder/src/components/UIBuilder/StepChainSelection/__tests__/ChainSelector.test.tsx",
+            "lines": 149,
+            "kind": "step",
+            "exports": [
+              "renderSelector"
+            ]
+          },
+          {
+            "name": "useNetworkServiceHealthCheck.test",
+            "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/__tests__/useNetworkServiceHealthCheck.test.tsx",
+            "lines": 149,
+            "kind": "step",
+            "exports": []
+          },
+          {
+            "name": "AddressBookDialog",
+            "path": "apps/builder/src/components/AddressBook/AddressBookDialog.tsx",
+            "lines": 140,
+            "kind": "general",
+            "exports": [
+              "AddressBookDialog"
+            ]
+          },
+          {
+            "name": "ResponsiveFieldsLayout",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/ResponsiveFieldsLayout.tsx",
+            "lines": 134,
+            "kind": "field",
+            "exports": [
+              "ResponsiveFieldsLayout"
+            ]
+          },
+          {
+            "name": "AnalyticsIntegration.test",
+            "path": "apps/builder/src/components/__tests__/AnalyticsIntegration.test.tsx",
+            "lines": 134,
+            "kind": "general",
+            "exports": [
+              "TestComponent"
+            ]
+          },
+          {
+            "name": "RelayerCredentialsCard",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RelayerConfiguration/components/RelayerCredentialsCard.tsx",
+            "lines": 130,
+            "kind": "credential",
+            "exports": [
+              "RelayerCredentialsCard"
+            ]
+          },
+          {
+            "name": "NetworkRow",
+            "path": "apps/builder/src/components/UIBuilder/StepChainSelection/components/NetworkRow.tsx",
+            "lines": 129,
+            "kind": "step",
+            "exports": [
+              "NetworkRow"
+            ]
+          },
+          {
+            "name": "App",
+            "path": "apps/builder/src/App.tsx",
+            "lines": 128,
+            "kind": "general",
+            "exports": []
+          },
+          {
+            "name": "FieldDisplays",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/FieldDisplays.tsx",
+            "lines": 128,
+            "kind": "field",
+            "exports": [
+              "FieldHeader",
+              "ParameterFieldDisplay",
+              "RuntimeSecretFieldDisplay"
+            ]
+          },
+          {
+            "name": "ContractUIsList",
+            "path": "apps/builder/src/components/Sidebar/ContractUIs/ContractUIsList.tsx",
+            "lines": 126,
+            "kind": "sidebar",
+            "exports": [
+              "ContractUIsList"
+            ]
+          },
+          {
+            "name": "ContractUIImportDialog",
+            "path": "apps/builder/src/components/Sidebar/ContractUIs/ContractUIImportDialog.tsx",
+            "lines": 124,
+            "kind": "sidebar",
+            "exports": [
+              "ContractUIImportDialog",
+              "handleClose"
+            ]
+          },
+          {
+            "name": "handleUiKitConfigUpdate.test",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/__tests__/handleUiKitConfigUpdate.test.tsx",
+            "lines": 120,
+            "kind": "step",
+            "exports": [
+              "handleUiKitConfigUpdate"
+            ]
+          },
+          {
+            "name": "RelayerGasConfigurationCard",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RelayerConfiguration/components/RelayerGasConfigurationCard.tsx",
+            "lines": 116,
+            "kind": "card",
+            "exports": [
+              "RelayerGasConfigurationCard"
+            ]
+          },
+          {
+            "name": "WritableFunctionRow",
+            "path": "apps/builder/src/components/UIBuilder/StepFunctionSelector/WritableFunctionRow.tsx",
+            "lines": 114,
+            "kind": "step",
+            "exports": [
+              "WritableFunctionRow"
+            ]
+          },
+          {
+            "name": "RelayerSelectionCard",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RelayerConfiguration/components/RelayerSelectionCard.tsx",
+            "lines": 107,
+            "kind": "card",
+            "exports": [
+              "RelayerSelectionCard"
+            ]
+          },
+          {
+            "name": "DevToolsDropdown",
+            "path": "apps/builder/src/components/Common/DevToolsDropdown.tsx",
+            "lines": 106,
+            "kind": "general",
+            "exports": [
+              "DevToolsDropdown",
+              "triggerExplorerError",
+              "triggerRpcError"
+            ]
+          },
+          {
+            "name": "MainActions",
+            "path": "apps/builder/src/components/Sidebar/AppSidebar/MainActions.tsx",
+            "lines": 103,
+            "kind": "sidebar",
+            "exports": [
+              "MainActions",
+              "handleImport",
+              "hasMeaningfulRecords"
+            ]
+          },
+          {
+            "name": "PrimaryMethodSelector",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/PrimaryMethodSelector.tsx",
+            "lines": 103,
+            "kind": "step",
+            "exports": [
+              "PrimaryMethodSelector",
+              "configContent"
+            ]
+          },
+          {
+            "name": "ContractDefinitionSourceIndicator",
+            "path": "apps/builder/src/components/warnings/ContractDefinitionSourceIndicator.tsx",
+            "lines": 103,
+            "kind": "general",
+            "exports": [
+              "ContractDefinitionSourceIndicator",
+              "getDisplaySource"
+            ]
+          },
+          {
+            "name": "ContractUIRenameDialog",
+            "path": "apps/builder/src/components/Sidebar/ContractUIs/ContractUIRenameDialog.tsx",
+            "lines": 100,
+            "kind": "sidebar",
+            "exports": [
+              "ContractUIRenameDialog"
+            ]
+          },
+          {
+            "name": "MobileFieldSelector",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/MobileFieldSelector.tsx",
+            "lines": 98,
+            "kind": "field",
+            "exports": [
+              "MobileFieldSelector"
+            ]
+          },
+          {
+            "name": "NetworkErrorHandler",
+            "path": "apps/builder/src/components/Common/NetworkErrorHandler.tsx",
+            "lines": 95,
+            "kind": "general",
+            "exports": [
+              "NetworkErrorHandler",
+              "handleCloseNetworkSettings"
+            ]
+          },
+          {
+            "name": "FormPreview",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/FormPreview.tsx",
+            "lines": 93,
+            "kind": "step",
+            "exports": [
+              "FormPreview"
+            ]
+          },
+          {
+            "name": "ContractLoadingErrors",
+            "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/components/ContractLoadingErrors.tsx",
+            "lines": 87,
+            "kind": "step",
+            "exports": [
+              "ContractLoadingErrors"
+            ]
+          },
+          {
+            "name": "StepComplete",
+            "path": "apps/builder/src/components/UIBuilder/StepComplete/StepComplete.tsx",
+            "lines": 86,
+            "kind": "step",
+            "exports": [
+              "StepComplete"
+            ]
+          },
+          {
+            "name": "ActionBar",
+            "path": "apps/builder/src/components/Common/ActionBar.tsx",
+            "lines": 85,
+            "kind": "general",
+            "exports": [
+              "ActionBar"
+            ]
+          },
+          {
+            "name": "StorageOperationsContext",
+            "path": "apps/builder/src/contexts/StorageOperationsContext.tsx",
+            "lines": 83,
+            "kind": "general",
+            "exports": [
+              "StorageOperationsProvider",
+              "setDeleting",
+              "setDuplicating",
+              "setExporting",
+              "setLoading",
+              "setSaving",
+              "updateOperationState"
+            ]
+          },
+          {
+            "name": "StepFunctionSelector",
+            "path": "apps/builder/src/components/UIBuilder/StepFunctionSelector/StepFunctionSelector.tsx",
+            "lines": 82,
+            "kind": "step",
+            "exports": [
+              "StepFunctionSelector"
+            ]
+          },
+          {
+            "name": "TitledSection",
+            "path": "apps/builder/src/components/Common/TitledSection.tsx",
+            "lines": 81,
+            "kind": "general",
+            "exports": [
+              "TitledSection"
+            ]
+          },
+          {
+            "name": "FieldSelectorList",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/FieldSelectorList.tsx",
+            "lines": 79,
+            "kind": "field",
+            "exports": [
+              "FieldSelectorList"
+            ]
+          },
+          {
+            "name": "FieldAdvancedSettings",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/FieldAdvancedSettings.tsx",
+            "lines": 77,
+            "kind": "field",
+            "exports": [
+              "FieldAdvancedSettings"
+            ]
+          },
+          {
+            "name": "app-component.template",
+            "path": "apps/builder/src/export/codeTemplates/app-component.template.tsx",
+            "lines": 77,
+            "kind": "export",
+            "exports": [
+              "App"
+            ]
+          },
+          {
+            "name": "AppSidebar",
+            "path": "apps/builder/src/components/Sidebar/AppSidebar/AppSidebar.tsx",
+            "lines": 71,
+            "kind": "sidebar",
+            "exports": [
+              "AppSidebar",
+              "handleLoadContractUI"
+            ]
+          },
+          {
+            "name": "RuntimeSecretButton",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RuntimeSecretButton.tsx",
+            "lines": 70,
+            "kind": "step",
+            "exports": [
+              "RuntimeSecretButton",
+              "handleReaddRuntimeSecret"
+            ]
+          },
+          {
+            "name": "ContractFormFields",
+            "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/components/ContractFormFields.tsx",
+            "lines": 67,
+            "kind": "field",
+            "exports": [
+              "ContractFormFields"
+            ]
+          },
+          {
+            "name": "AliasLabelBridge",
+            "path": "apps/builder/src/contexts/AliasLabelBridge.tsx",
+            "lines": 67,
+            "kind": "general",
+            "exports": [
+              "AliasLabelBridge"
+            ]
+          },
+          {
+            "name": "WritableFunctionsSection",
+            "path": "apps/builder/src/components/UIBuilder/StepFunctionSelector/WritableFunctionsSection.tsx",
+            "lines": 61,
+            "kind": "step",
+            "exports": [
+              "WritableFunctionsSection"
+            ]
+          },
+          {
+            "name": "ExecutionMethodSettings",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/ExecutionMethodSettings.tsx",
+            "lines": 58,
+            "kind": "step",
+            "exports": [
+              "ExecutionMethodSettings"
+            ]
+          },
+          {
+            "name": "BlockchainAddressFieldWithRichPreview",
+            "path": "apps/builder/src/components/fields/BlockchainAddressFieldWithRichPreview.tsx",
+            "lines": 58,
+            "kind": "field",
+            "exports": [
+              "BlockchainAddressFieldWithRichPreview"
+            ]
+          },
+          {
+            "name": "useContractForm.reset-guard.test",
+            "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/__tests__/useContractForm.reset-guard.test.tsx",
+            "lines": 57,
+            "kind": "step",
+            "exports": []
+          },
+          {
+            "name": "TypeConversionWarning",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/TypeConversionWarning.tsx",
+            "lines": 57,
+            "kind": "step",
+            "exports": [
+              "TypeConversionWarning",
+              "getMessage"
+            ]
+          },
+          {
+            "name": "TypeWarningSection",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/TypeWarningSection.tsx",
+            "lines": 54,
+            "kind": "step",
+            "exports": [
+              "TypeWarningSection"
+            ]
+          },
+          {
+            "name": "EoaConfiguration",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/EoaConfiguration.tsx",
+            "lines": 54,
+            "kind": "step",
+            "exports": [
+              "EoaConfiguration"
+            ]
+          },
+          {
+            "name": "GeneratedForm",
+            "path": "apps/builder/src/export/templates/typescript-react-vite/src/components/GeneratedForm.tsx",
+            "lines": 52,
+            "kind": "export",
+            "exports": [
+              "GeneratedForm"
+            ]
+          },
+          {
+            "name": "TrimmedArtifactsBanner",
+            "path": "apps/builder/src/components/UIBuilder/StepContractDefinition/components/TrimmedArtifactsBanner.tsx",
+            "lines": 51,
+            "kind": "step",
+            "exports": [
+              "TrimmedArtifactsBanner"
+            ]
+          },
+          {
+            "name": "App",
+            "path": "apps/builder/src/export/templates/typescript-react-vite/src/App.tsx",
+            "lines": 49,
+            "kind": "export",
+            "exports": [
+              "App"
+            ]
+          },
+          {
+            "name": "ContractUIDeleteDialog",
+            "path": "apps/builder/src/components/Sidebar/ContractUIs/ContractUIDeleteDialog.tsx",
+            "lines": 47,
+            "kind": "sidebar",
+            "exports": [
+              "ContractUIDeleteDialog"
+            ]
+          },
+          {
+            "name": "SidebarContent",
+            "path": "apps/builder/src/components/Sidebar/AppSidebar/SidebarContent.tsx",
+            "lines": 45,
+            "kind": "sidebar",
+            "exports": [
+              "SidebarContent"
+            ]
+          },
+          {
+            "name": "ContractUIsSection",
+            "path": "apps/builder/src/components/Sidebar/AppSidebar/ContractUIsSection.tsx",
+            "lines": 40,
+            "kind": "sidebar",
+            "exports": [
+              "ContractUIsSection"
+            ]
+          },
+          {
+            "name": "FilterControls",
+            "path": "apps/builder/src/components/UIBuilder/StepFunctionSelector/FilterControls.tsx",
+            "lines": 37,
+            "kind": "filter",
+            "exports": [
+              "FilterControls"
+            ]
+          },
+          {
+            "name": "SidebarNavIcons",
+            "path": "apps/builder/src/components/Sidebar/AppSidebar/SidebarNavIcons.tsx",
+            "lines": 36,
+            "kind": "sidebar",
+            "exports": [
+              "SidebarNavIcons"
+            ]
+          },
+          {
+            "name": "main",
+            "path": "apps/builder/src/export/templates/typescript-react-vite/src/main.tsx",
+            "lines": 36,
+            "kind": "export",
+            "exports": []
+          },
+          {
+            "name": "OtherToolsSection",
+            "path": "apps/builder/src/components/Sidebar/AppSidebar/OtherToolsSection.tsx",
+            "lines": 34,
+            "kind": "sidebar",
+            "exports": [
+              "OtherToolsSection"
+            ]
+          },
+          {
+            "name": "NameResolverBridge",
+            "path": "apps/builder/src/contexts/NameResolverBridge.tsx",
+            "lines": 31,
+            "kind": "general",
+            "exports": [
+              "NameResolverBridge"
+            ]
+          },
+          {
+            "name": "main",
+            "path": "apps/builder/src/main.tsx",
+            "lines": 27,
+            "kind": "general",
+            "exports": []
+          },
+          {
+            "name": "FunctionNoteSection",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/FunctionNoteSection.tsx",
+            "lines": 27,
+            "kind": "step",
+            "exports": [
+              "FunctionNoteSection"
+            ]
+          },
+          {
+            "name": "StepTitleWithDescription",
+            "path": "apps/builder/src/components/UIBuilder/Common/StepTitleWithDescription.tsx",
+            "lines": 26,
+            "kind": "step",
+            "exports": [
+              "StepTitleWithDescription"
+            ]
+          },
+          {
+            "name": "RelayerHeader",
+            "path": "apps/builder/src/components/UIBuilder/StepFormCustomization/components/RelayerConfiguration/components/RelayerHeader.tsx",
+            "lines": 23,
+            "kind": "step",
+            "exports": [
+              "RelayerHeader"
+            ]
+          },
+          {
+            "name": "ContractUIStorageProvider",
+            "path": "apps/builder/src/contexts/ContractUIStorageProvider.tsx",
+            "lines": 23,
+            "kind": "general",
+            "exports": [
+              "ContractUIStorageProvider"
+            ]
+          },
+          {
+            "name": "Header",
+            "path": "apps/builder/src/components/Common/Header.tsx",
+            "lines": 22,
+            "kind": "general",
+            "exports": [
+              "Header"
+            ]
+          },
+          {
+            "name": "NetworkDetail",
+            "path": "apps/builder/src/components/UIBuilder/StepChainSelection/components/NetworkDetail.tsx",
+            "lines": 20,
+            "kind": "step",
+            "exports": [
+              "NetworkDetail"
+            ]
+          },
+          {
+            "name": "HeroSection",
+            "path": "apps/builder/src/components/UIBuilder/HeroSection.tsx",
+            "lines": 15,
+            "kind": "hero",
+            "exports": [
+              "HeroSection"
+            ]
+          },
+          {
+            "name": "SidebarLogo",
+            "path": "apps/builder/src/components/Sidebar/AppSidebar/SidebarLogo.tsx",
+            "lines": 11,
+            "kind": "sidebar",
+            "exports": [
+              "SidebarLogo"
+            ]
+          }
+        ],
+        "features": {}
+      },
+      "harvestedAt": "2026-10-06T20:23:23+00:00"
+    },
+    {
+      "name": "MoneyPrinterTurbo_",
+      "purpose": "Python/FastAPI short-video generation service (task pipeline, subtitles, TTS)",
+      "path": "/home/user/reachmark-logs/upstream/MoneyPrinterTurbo_",
+      "present": true,
+      "files": 149,
+      "bytes": 3871174,
+      "codeLines": 47216,
+      "languages": {
+        ".md": 6,
+        ".py": 88,
+        ".toml": 2,
+        ".yml": 3,
+        ".json": 13,
+        ".html": 1,
+        ".css": 1
+      },
+      "topLevel": [
+        "Dockerfile",
+        "Dockerfile.gpu",
+        "LICENSE",
+        "README-en.md",
+        "README-ja.md",
+        "README.md",
+        "app",
+        "cli.py",
+        "config.example.toml",
+        "docker-compose.gpu.yml",
+        "docker-compose.release.yml",
+        "docker-compose.yml",
+        "docs",
+        "main.py",
+        "pyproject.toml",
+        "requirements.txt",
+        "resource",
+        "test",
+        "uv.lock",
+        "webui",
+        "webui.bat",
+        "webui.sh"
+      ],
+      "entrypoints": [
+        "app/config/config.py",
+        "app/models/schema.py",
+        "app/router.py",
+        "cli.py",
+        "main.py"
+      ],
+      "dependencies": {
+        "requirements.txt": {
+          "python": [
+            "moviepy",
+            "streamlit",
+            "streamlit-tour",
+            "edge_tts",
+            "fastapi",
+            "uvicorn",
+            "openai",
+            "faster-whisper",
+            "loguru",
+            "google-genai",
+            "dashscope",
+            "azure-cognitiveservices-speech",
+            "redis",
+            "python-multipart",
+            "pyyaml",
+            "requests",
+            "packaging",
+            "socksio",
+            "pydub",
+            "audioop-lts",
+            "litellm"
+          ]
+        },
+        "pyproject.toml": {
+          "python": [
+            "",
+            "requires",
+            "build-backend",
+            "",
+            "name",
+            "version",
+            "description",
+            "readme",
+            "requires-python",
+            "license",
+            "dependencies",
+            "\"moviepy",
+            "\"streamlit",
+            "\"streamlit-tour",
+            "\"edge-tts",
+            "\"fastapi",
+            "\"uvicorn",
+            "\"openai",
+            "\"faster-whisper",
+            "\"loguru",
+            "\"dashscope",
+            "\"azure-cognitiveservices-speech",
+            "\"redis",
+            "\"python-multipart",
+            "\"pyyaml",
+            "\"requests",
+            "\"packaging",
+            "\"socksio",
+            "\"pydub",
+            "\"audioop-lts",
+            "\"litellm",
+            "\"google-genai",
+            "]",
+            "",
+            "twelvelabs",
+            "\"twelvelabs",
+            "]",
+            "",
+            "dev",
+            "\"coverage",
+            "\"pytest",
+            "\"ruff",
+            "]",
+            "",
+            "\"webui/Main.py\"",
+            "",
+            "branch",
+            "source",
+            "",
+            "fail_under",
+            "show_missing",
+            "skip_covered",
+            "",
+            "packages",
+            "",
+            "package"
+          ]
+        }
+      },
+      "extracted": {
+        "designTokens": {
+          "cssVariables": {},
+          "classes": [
+            "mpt-brand",
+            "mpt-brand__name",
+            "mpt-brand__update",
+            "mpt-brand__version"
+          ],
+          "keyframes": [],
+          "fonts": [],
+          "mediaQueries": 5
+        },
+        "features": {
+          "controllers": [
+            "app/controllers/base.py",
+            "app/controllers/manager/base_manager.py",
+            "app/controllers/manager/memory_manager.py",
+            "app/controllers/manager/redis_manager.py",
+            "app/controllers/ping.py",
+            "app/controllers/v1/base.py",
+            "app/controllers/v1/llm.py",
+            "app/controllers/v1/video.py"
+          ],
+          "services": [
+            "app/services/__init__.py",
+            "app/services/bgm.py",
+            "app/services/cache_manager.py",
+            "app/services/elevenlabs_music.py",
+            "app/services/llm.py",
+            "app/services/loomloom.py",
+            "app/services/material.py",
+            "app/services/material_cache.py",
+            "app/services/sonilo.py",
+            "app/services/state.py",
+            "app/services/subtitle.py",
+            "app/services/task.py",
+            "app/services/task_artifacts.py",
+            "app/services/twelvelabs.py",
+            "app/services/upload_post.py",
+            "app/services/utils/video_effects.py",
+            "app/services/version_checker.py",
+            "app/services/video.py",
+            "app/services/voice.py",
+            "app/services/webui_task.py",
+            "test/services/__init__.py",
+            "test/services/test_bgm.py",
+            "test/services/test_cache_manager.py",
+            "test/services/test_cli.py",
+            "test/services/test_clip_speed.py",
+            "test/services/test_config.py",
+            "test/services/test_controller_base.py",
+            "test/services/test_controller_llm.py",
+            "test/services/test_controller_ping.py",
+            "test/services/test_controller_video.py",
+            "test/services/test_elevenlabs_music.py",
+            "test/services/test_llm.py",
+            "test/services/test_loomloom.py",
+            "test/services/test_material.py",
+            "test/services/test_material_cache.py",
+            "test/services/test_mpt_agent_skill.py",
+            "test/services/test_schema.py",
+            "test/services/test_sonilo.py",
+            "test/services/test_state.py",
+            "test/services/test_subtitle.py"
+          ]
+        }
+      },
+      "harvestedAt": "2026-10-06T20:23:23+00:00"
+    },
+    {
+      "name": "claw-code",
+      "purpose": "Agent harness + repository clawing utilities (probe/manifest/roadmap scripts)",
+      "path": "/home/user/reachmark-logs/upstream/claw-code",
+      "present": true,
+      "files": 315,
+      "bytes": 11233416,
+      "codeLines": 110833,
+      "languages": {
+        ".json": 40,
+        ".md": 54,
+        ".yml": 1,
+        ".toml": 12,
+        ".rs": 101,
+        ".html": 1,
+        ".py": 78
+      },
+      "topLevel": [
+        "AGENTS.md",
+        "CLAUDE.md",
+        "CODE_OF_CONDUCT.md",
+        "CONTRIBUTING.md",
+        "Containerfile",
+        "LICENSE",
+        "PARITY.md",
+        "PHILOSOPHY.md",
+        "README.md",
+        "ROADMAP.md",
+        "SECURITY.md",
+        "SUPPORT.md",
+        "USAGE.md",
+        "assets",
+        "concept.md",
+        "docker-compose.yml",
+        "docs",
+        "how_to_run.md",
+        "install.sh",
+        "prd.json",
+        "progress.txt",
+        "rust",
+        "scripts",
+        "src",
+        "tests"
+      ],
+      "entrypoints": [
+        "src/main.py"
+      ],
+      "dependencies": {},
+      "extracted": {
+        "features": {
+          "services": [
+            "src/services/__init__.py"
+          ],
+          "harnessScripts": [
+            "rust/scripts/run_mock_parity_diff.py",
+            "scripts/cc2_board.py",
+            "scripts/dogfood-probe.py",
+            "scripts/generate_cc2_board.py",
+            "scripts/validate_cc2_board.py"
+          ]
+        }
+      },
+      "harvestedAt": "2026-10-06T20:23:23+00:00"
+    }
+  ]
+}

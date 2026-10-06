@@ -1,0 +1,280 @@
+generator client {
+    provider = "prisma-client-js"
+    // Prisma 6 runs driver adapters without a preview flag; the upstream
+    // `previewFeatures = ["driverAdapters"]` line was removed after the warning.
+}
+
+datasource db {
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
+}
+
+model User {
+    id        String   @id
+    email     String
+    name      String
+    image     String
+    earned    Float    @default(0)
+    withdrawn Float    @default(0)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relations
+    Listing       Listing[]
+    ownerChats    Chat[]       @relation("OwnerChats")
+    chatUserChats Chat[]       @relation("ChatUserChats")
+    withdrawals   Withdrawal[]
+}
+
+// ---- Reachmark extension ----------------------------------------------------
+// AccountsBazaar shipped social platforms only. Reachmark Logs sells "logs"
+// across four asset classes, so the enum was widened (additively, so existing
+// rows stay valid) and AssetClass was introduced to group them.
+enum AssetClass {
+    social
+    gaming
+    streaming
+    saas
+}
+
+enum Platform {
+    // social (upstream)
+    youtube
+    instagram
+    tiktok
+    facebook
+    twitter
+    linkedin
+    pinterest
+    snapchat
+    twitch
+    discord
+    // gaming
+    steam
+    riot
+    roblox
+    epic
+    // streaming
+    netflix
+    spotify
+    disney
+    crunchyroll
+    primevideo
+    // aged SaaS & mail
+    gmail
+    outlook
+    adobe
+    notion
+    microsoft365
+}
+
+enum Niche {
+    lifestyle
+    fitness
+    food
+    travel
+    tech
+    gaming
+    fashion
+    beauty
+    business
+    education
+    entertainment
+    music
+    art
+    sports
+    health
+    finance
+    // Reachmark extension: the upstream enum could not represent these niches,
+    // so the seed silently collapsed them (crypto -> finance, auto -> business).
+    // That broke live search — the client searched for "crypto" and the API had
+    // only ever stored "finance". Enum members are single identifiers, so
+    // multi-word niches are stored with underscores and labelled in the DTO.
+    auto
+    crypto
+    real_estate
+    pets
+    diy
+    other
+}
+
+enum Status {
+    active
+    ban
+    sold
+    deleted
+    inactive
+}
+
+model Listing {
+    id                    String   @id @default(uuid())
+    ownerId               String
+    title                 String
+    platform              Platform
+    username              String?
+    followers_count       Float
+    engagement_rate       Float?
+    monthly_views         Float?
+    niche                 Niche
+    price                 Float
+    description           String?
+    verified              Boolean  @default(false)
+    monetized             Boolean  @default(false)
+    country               String?
+    age_range             String
+    status                Status   @default(active)
+    featured              Boolean  @default(false)
+    images                String[]
+    createdAt             DateTime @default(now())
+    updatedAt             DateTime @updatedAt
+    platformAssured       Boolean  @default(false)
+    isCredentialSubmitted Boolean  @default(false)
+    isCredentialVerified  Boolean  @default(false)
+    isCredentialChanged   Boolean  @default(false)
+
+    // ---- Reachmark extension ------------------------------------------------
+    assetClass        AssetClass @default(social)
+    handle            String?
+    region            String?
+    language          String     @default("English")
+    audienceSplitPct  Int        @default(0)
+    deliveryHours     Int        @default(24)
+    escrowDays        Int        @default(7)
+    handoverFormat    String?
+    proofReelUrl      String?
+    viewCount24h      Int        @default(0)
+    watcherCount      Int        @default(0)
+    offerCount        Int        @default(0)
+    fairValueEstimate Float?
+
+    // Relations
+    owner           User             @relation(fields: [ownerId], references: [id])
+    chats           Chat[]
+    transactions    Transaction[]
+    proofArtifacts  ProofArtifact[]
+    credentialChain CredentialEvent[]
+}
+
+// User can have multiple chats
+model Chat {
+    id                  String            @id @default(uuid())
+    chatUserId          String
+    ownerUserId         String
+    listingId           String
+    messages            Message[]
+    platformMessages    PlatformMessage[]
+    createdAt           DateTime          @default(now())
+    updatedAt           DateTime          @updatedAt
+    active              Boolean           @default(true)
+    lastMessage         String            @default("")
+    isLastMessageRead   Boolean           @default(true)
+    lastMessageSenderId String            @default("")
+    isTokenAmountPaid   Boolean           @default(false)
+
+    // Relations
+    ownerUser User    @relation("OwnerChats", fields: [ownerUserId], references: [id])
+    chatUser  User    @relation("ChatUserChats", fields: [chatUserId], references: [id])
+    listing   Listing @relation(fields: [listingId], references: [id])
+
+    @@unique([chatUserId, ownerUserId, listingId])
+}
+
+model Message {
+    id        String   @id @default(uuid())
+    chatId    String
+    message   String
+    sender_id String
+    createdAt DateTime @default(now())
+
+    // Relations
+    chat Chat @relation(fields: [chatId], references: [id])
+}
+
+model PlatformMessage {
+    id        String   @id @default(uuid())
+    chatId    String
+    message   String
+    sender_id String   @default("platform")
+    createdAt DateTime @default(now())
+
+    // Relations
+    chat Chat @relation(fields: [chatId], references: [id])
+}
+
+// Upstream shape kept verbatim (Admin -> credential intercept queue).
+model Credential {
+    id                 String   @id @default(uuid())
+    listingId          String
+    originalCredential Json[]   @default([])
+    updatedCredential  Json[]   @default([])
+    createdAt          DateTime @default(now())
+
+    // ---- Reachmark extension ------------------------------------------------
+    submittedAt DateTime?
+    verifiedAt  DateTime?
+    verifiedBy  String?
+    handover    String?
+}
+
+// ---- Reachmark extension ---------------------------------------------------
+// The credential chain is the public trust surface: an append-only log of every
+// artefact the seller disclosed and every mutation ops made while verifying it.
+model CredentialEvent {
+    id        String   @id @default(uuid())
+    listingId String
+    kind      String // submitted | ownership_test | verified | rotated | rolled_back | flagged
+    actor     String // seller id | ops user id | "system"
+    detail    String?
+    hash      String? // sha256 of the artefact bundle at this point in time
+    createdAt DateTime @default(now())
+
+    listing Listing @relation(fields: [listingId], references: [id])
+}
+
+// Hashed proof artefacts (analytics screenshots, audience exports, reel renders).
+model ProofArtifact {
+    id        String   @id @default(uuid())
+    listingId String
+    kind      String // analytics | audience | monetisation | reel
+    label     String
+    url       String
+    sha256    String
+    bytes     Int      @default(0)
+    createdAt DateTime @default(now())
+
+    listing Listing @relation(fields: [listingId], references: [id])
+}
+
+model Transaction {
+    id        String   @id @default(uuid())
+    listingId String
+    ownerId   String
+    userId    String
+    amount    Float
+    isPaid    Boolean  @default(false)
+    createdAt DateTime @default(now())
+
+    // ---- Reachmark extension: escrow engine ---------------------------------
+    escrowState String?   @default("funded") // funded | testing | chain_confirmed | released | refunded | disputed
+    releaseAt   DateTime?
+    releasedAt  DateTime?
+    disputeId   String?
+    feeAmount   Float     @default(0)
+
+    // Relations
+    listing Listing @relation(fields: [listingId], references: [id])
+}
+
+model Withdrawal {
+    id          String   @id @default(uuid())
+    userId      String
+    amount      Float
+    account     Json[]
+    isWithdrawn Boolean  @default(false)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    // Relations
+    user User @relation(fields: [userId], references: [id])
+}

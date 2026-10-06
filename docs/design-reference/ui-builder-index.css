@@ -1,0 +1,5 @@
+@import './oz-tailwind.generated.css';
+
+@layer components {
+  /* Example: Add core-specific component styles */
+}

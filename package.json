@@ -1,0 +1,39 @@
+{
+  "name": "reachmark-logs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Reachmark Logs \u2014 the verified marketplace for social, gaming, streaming and aged digital logs. Merged monorepo built from AccountsBazaar + ui-builder + MoneyPrinterTurbo + claw-code.",
+  "type": "module",
+  "workspaces": [
+    "apps/web",
+    "apps/api",
+    "packages/copilot",
+    "packages/harvest"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "npm run dev --workspace apps/web",
+    "build": "npm run build --workspace apps/web",
+    "preview": "npm run preview --workspace apps/web",
+    "api": "npm run dev --workspace apps/api",
+    "claw": "python3 tools/claw/claw.py all",
+    "claw:scan": "python3 tools/claw/claw.py scan",
+    "claw:probe": "python3 tools/claw/claw.py probe",
+    "claw:merge": "python3 tools/claw/claw.py merge",
+    "claw:doctor": "python3 tools/claw/claw.py doctor",
+    "studio": "cd services/studio && python3 main.py",
+    "studio:docs": "echo 'http://127.0.0.1:8501/docs'",
+    "merge:report": "node tools/merge-report.mjs"
+  },
+  "keywords": [
+    "marketplace",
+    "logs",
+    "escrow",
+    "monorepo",
+    "react",
+    "fastapi"
+  ],
+  "license": "MIT"
+}

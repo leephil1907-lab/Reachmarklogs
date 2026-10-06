@@ -1,0 +1,57 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+dist/
+build/
+out/
+.next/
+.turbo/
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+services/studio/resource/songs/*.mp3
+services/studio/output/
+
+# ------------------------------------------------------------------ upstream
+# The four imported repositories live here as *inputs* to the claw harness
+# (1,084 files / ~31 MB). They are third-party code with their own licences and
+# are deliberately not committed. Re-fetch them with:
+#   REACHMARK_UPSTREAM=./upstream  &&  npm run claw
+# The merge is reproducible without them: every artefact claw produced is
+# checked into packages/harvest/ and docs/.
+upstream/
+
+# local media shim (proof uploads written to disk when ImageKit is unconfigured)
+.uploads/
+
+# env & secrets
+.env
+.env.*
+!.env.example
+*.pem
+.netrc
+
+# editors / os
+.DS_Store
+Thumbs.db
+.idea/
+*.swp
+
+# logs
+*.log
+npm-debug.log*
+logs/
+
+# vite
+.vite/
+apps/web/stats.html
+
+# python bytecode from the FastAPI service
+services/studio/**/__pycache__/

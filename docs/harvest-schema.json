@@ -1,0 +1,140 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Reachmark Logs harvest schema",
+  "description": "Shapes written by tools/claw/claw.py and read by apps/web. Kept beside the manifests so consumers can validate without guessing.",
+  "definitions": {
+    "repoManifest": {
+      "type": "object",
+      "required": ["generatedBy", "generatedAt", "repos"],
+      "properties": {
+        "generatedBy": { "type": "string" },
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "repoCount": { "type": "integer" },
+        "presentCount": { "type": "integer" },
+        "totalFiles": { "type": "integer" },
+        "totalBytes": { "type": "integer" },
+        "totalCodeLines": { "type": "integer" },
+        "repos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "purpose", "present", "files", "codeLines"],
+            "properties": {
+              "name": { "type": "string" },
+              "purpose": { "type": "string" },
+              "path": { "type": "string" },
+              "present": { "type": "boolean" },
+              "files": { "type": "integer" },
+              "bytes": { "type": "integer" },
+              "codeLines": { "type": "integer" },
+              "languages": { "type": "object", "additionalProperties": { "type": "integer" } },
+              "topLevel": { "type": "array", "items": { "type": "string" } },
+              "entrypoints": { "type": "array", "items": { "type": "string" } },
+              "dependencies": { "type": "object" },
+              "extracted": {
+                "type": "object",
+                "properties": {
+                  "prismaModels": { "type": "array" },
+                  "modelNames": { "type": "array", "items": { "type": "string" } },
+                  "designTokens": { "type": "object" },
+                  "tailwindTheme": { "type": "object" },
+                  "components": { "type": "array" },
+                  "features": { "type": "object" }
+                }
+              },
+              "harvestedAt": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      }
+    },
+    "toolCatalog": {
+      "type": "object",
+      "required": ["generatedBy", "generatedAt", "probed", "sites"],
+      "properties": {
+        "generatedBy": { "type": "string" },
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "probed": { "type": "integer" },
+        "reachable": { "type": "integer" },
+        "categories": { "type": "array", "items": { "type": "string" } },
+        "sites": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["slug", "name", "url", "category", "whatItIs", "reachmarkUse", "status"],
+            "properties": {
+              "slug": { "type": "string" },
+              "name": { "type": "string" },
+              "url": { "type": "string", "format": "uri" },
+              "category": { "type": "string" },
+              "whatItIs": { "type": "string" },
+              "reachmarkUse": { "type": "string" },
+              "status": { "enum": ["ok", "blocked", "unreachable"] },
+              "httpStatus": { "type": "integer" },
+              "finalUrl": { "type": "string" },
+              "title": { "type": "string" },
+              "metaDescription": { "type": "string" },
+              "favicon": { "type": "string" },
+              "themeColor": { "type": "string" },
+              "latencyMs": { "type": "integer" },
+              "probedAt": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      }
+    },
+    "buildManifest": {
+      "type": "object",
+      "required": ["generatedBy", "generatedAt", "project", "totals", "capabilityMatrix", "fingerprint"],
+      "properties": {
+        "generatedBy": { "type": "string" },
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "project": { "type": "string" },
+        "tagline": { "type": "string" },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "repo": { "type": "string" },
+              "purpose": { "type": "string" },
+              "files": { "type": "integer" },
+              "loc": { "type": "integer" },
+              "bytes": { "type": "integer" }
+            }
+          }
+        },
+        "totals": {
+          "type": "object",
+          "properties": {
+            "sourceFiles": { "type": "integer" },
+            "sourceLoc": { "type": "integer" },
+            "componentsDiscovered": { "type": "integer" },
+            "designSystems": { "type": "integer" },
+            "dataModels": { "type": "integer" },
+            "referenceTools": { "type": "integer" },
+            "referenceToolsReachable": { "type": "integer" }
+          }
+        },
+        "capabilityMatrix": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "capability": { "type": "string" },
+              "source": { "type": "string" },
+              "reachmarkSurface": { "type": "string" }
+            }
+          }
+        },
+        "designSystems": { "type": "array" },
+        "dataModels": { "type": "array" },
+        "components": { "type": "array" },
+        "reusableComponents": { "type": "array" },
+        "referenceToolCategories": { "type": "array", "items": { "type": "string" } },
+        "referenceTools": { "type": "array" },
+        "fingerprint": { "type": "string" }
+      }
+    }
+  }
+}

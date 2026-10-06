@@ -1,0 +1,19 @@
+{
+  "name": "@reachmark/harvest",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Machine-readable build manifests produced by tools/claw — repo inventory, capability matrix, component catalogue and the 50-tool reference library.",
+  "type": "module",
+  "exports": {
+    "./repo-manifest": "./repo-manifest.json",
+    "./tool-catalog": "./tool-catalog.json",
+    "./build-manifest": "./build-manifest.json"
+  },
+  "files": [
+    "*.json",
+    "README.md"
+  ],
+  "scripts": {
+    "sync": "node ../../tools/sync-harvest.mjs"
+  }
+}
