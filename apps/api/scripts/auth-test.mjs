@@ -83,6 +83,8 @@ if (!process.env.API_ORIGIN) {
 
 /* Unique per run so re-running never collides with a previous account. */
 const stamp = Date.now().toString(36)
+/* Any throttle row created after this moment belongs to this run. */
+const startedAt = new Date()
 const email = (who) => `${who}.${stamp}@authtest.dev`
 const PASSWORD = 'correct-horse-battery-staple'
 const NEW_PASSWORD = 'a-completely-different-secret'
@@ -388,6 +390,42 @@ head('storage hardening')
     const digest = createHash('sha256').update(buyerToken).digest('hex')
     const match = await prisma.session.findFirst({ where: { tokenHash: digest } })
     check(Boolean(match), 'the live bearer token exists only as a digest in the database')
+
+    /* ---------------------------------------------------------- teardown --- */
+
+    // This suite runs against the same database a developer then uses by hand,
+    // so it takes its fixtures with it. Every address it creates is under
+    // @authtest.dev and every throttle row is keyed by a digest of one, so the
+    // purge cannot touch a real account — including the demo logins used above
+    // to prove role gating, which are deliberately left alone.
+    const fixtures = await prisma.user.findMany({
+      where: { email: { endsWith: '@authtest.dev' } },
+      select: { id: true, email: true },
+    })
+    const ids = fixtures.map((u) => u.id)
+
+    // Throttle rows are keyed by a digest of the address, and the suite
+    // deliberately throttles addresses that were never registered (that is how
+    // the anti-enumeration guarantee is proven), so they cannot be found by
+    // looking up users. Purge by the addresses the suite actually used.
+    const addresses = ['buyer', 'verifier', 'leaver', 'changer', 'locktarget', 'ghost', 'nobody', 'never-registered']
+      .flatMap((who) => [email(who), email(who).toUpperCase()])
+    const attemptKeys = { in: addresses.map((a) => createHash('sha256').update(`login:${a}`).digest('hex')) }
+
+    if (ids.length) {
+      await prisma.session.deleteMany({ where: { userId: { in: ids } } })
+      await prisma.authToken.deleteMany({ where: { userId: { in: ids } } })
+      await prisma.user.deleteMany({ where: { id: { in: ids } } })
+    }
+    // Also sweep rows this run created for addresses we did not enumerate
+    // above. Nothing else can write to this database while the suite runs (it
+    // spawns its own API and the dev Postgres takes one connection), so the
+    // timestamp is a reliable boundary.
+    await prisma.loginAttempt.deleteMany({ where: { OR: [{ key: attemptKeys }, { firstAt: { gte: startedAt } }] } })
+    const leftovers = await prisma.user.count({ where: { email: { endsWith: '@authtest.dev' } } })
+    const stuck = await prisma.loginAttempt.count({ where: { key: attemptKeys } })
+    check(leftovers === 0 && stuck === 0, 'the suite cleans up after itself',
+      `${ids.length} fixture accounts and every throttle row removed`)
   } finally {
     await prisma.$disconnect()
   }

@@ -61,7 +61,7 @@ calls same-origin `/api`. No CORS, no second deploy target, no client/server ver
 | `MAX_FAILED_LOGINS` | `8` | Failures before a lockout. |
 | `LOCKOUT_MINUTES` | `15` | Lockout length. |
 | `SESSION_COOKIE_NAME` | `reachmark_session` | httpOnly cookie name. |
-| `APP_URL` | `http://localhost:5173` | Base for links in verification / reset mail. |
+| `APP_URL` | `http://localhost:5173` | Base for the links in verification / reset mail. **Set this to the public origin in production** — it is what lands in the user's inbox. |
 | `PG_POOL_MAX` | `1` | Keep at 1 against the embedded dev Postgres, which serves a single connection. |
 
 ## What the security model actually is
@@ -87,11 +87,21 @@ calls same-origin `/api`. No CORS, no second deploy target, no client/server ver
 Every claim above is asserted by a suite; run all four before shipping a change:
 
 ```bash
-npm run test:e2e      --workspace apps/api   # 98 checks — catalog, escrow, ops, auth gates
-npm run test:auth     --workspace apps/api   # 75 checks — signup, sessions, throttling, hashes at rest
-npm run test:copilot  --workspace apps/api   # 36 checks — listing-copilot parity
-node apps/web/scripts/smoke.mjs              # 20 routes render clean
+npm test                # all four, from the repo root
+npm run test:api        # the three suites below
+npm run test:web        # the route smoke test
+
+npm run test:e2e      --workspace apps/api   # 102 checks — catalog, escrow, ops, auth gates, sign-out
+npm run test:auth     --workspace apps/api   #  76 checks — signup, sessions, throttling, hashes at rest
+npm run test:copilot  --workspace apps/api   #  36 checks — listing-copilot parity
+npm run smoke         --workspace apps/web   #  20 routes render clean
 ```
+
+The suites sign in as real seeded accounts and create real rows, so they clean up after themselves:
+e2e signs both accounts back out (and asserts the tokens are dead), and the auth suite deletes every
+`@authtest.dev` fixture, its sessions, its one-time tokens and every throttle row it wrote — including
+the addresses it deliberately throttled without ever registering. Running `npm test` against the dev
+database leaves it exactly as it found it: 23 users, 72 listings.
 
 The auth suite spawns its own API on `:3422` and, because the embedded dev Postgres accepts exactly
 one connection, deliberately terminates that child before it opens its own Prisma client to inspect

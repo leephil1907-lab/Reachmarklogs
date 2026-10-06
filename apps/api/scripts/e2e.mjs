@@ -381,6 +381,18 @@ head('auth boundary')
   check(admin.status === 200 && Boolean(admin.json?.dashboardData), 'an admin gets the ops dashboard', `listings=${admin.json?.dashboardData?.totalListings}`)
   const anon = await api('/api/me/session')
   check(anon.status === 401, 'an unauthenticated session is refused', `${anon.status}`)
+
+  /* ------------------------------------------------------- 10. sign out --- */
+
+  // The suite signs in as real seeded accounts, so it signs back out: every run
+  // would otherwise leave two live sessions behind in a database a developer
+  // then opens by hand. Signing out also proves the token really dies.
+  for (const [label, token] of [['seller', sellerToken], ['admin', adminToken]]) {
+    const out = await api('/api/auth/logout', { method: 'POST', token })
+    check(out.status === 200, `the ${label} signs out`, `${out.status}`)
+    const after = await api('/api/me/session', { token })
+    check(after.status === 401, `the ${label}'s token is dead afterwards`, `${after.status}`)
+  }
 }
 
 /* ---------------------------------------------------------------- report --- */
