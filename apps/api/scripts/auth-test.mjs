@@ -19,6 +19,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
 import { createHash } from 'node:crypto'
 import 'dotenv/config'
+import { withoutMailer } from './support/env.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const apiRoot = resolve(here, '..')
@@ -57,9 +58,14 @@ async function api(path, { method, body, token, headers = {} } = {}) {
 
 if (!process.env.API_ORIGIN) {
   console.log(`\x1b[2mstarting api on :${PORT} …\x1b[0m`)
+  // SMTP is blanked for the child process (see scripts/support/env.mjs). This
+  // suite proves the verification and reset flows by reading the single-use links
+  // out of the API's log, which the API only prints when no mailer is configured:
+  // inheriting real credentials would both mail every fixture address and lose
+  // the tokens this suite asserts on.
   child = spawn(process.execPath, ['server.js'], {
     cwd: apiRoot,
-    env: { ...process.env, PORT: String(PORT), NODE_ENV: 'test', AUTH_MODE: 'local', APP_URL: 'http://localhost:5173' },
+    env: { ...process.env, ...withoutMailer, PORT: String(PORT), NODE_ENV: 'test', AUTH_MODE: 'local', APP_URL: 'http://localhost:5173' },
     stdio: ['ignore', 'pipe', 'pipe'],
   })
   let boot = ''
@@ -96,6 +102,15 @@ function tokenFromLog(who) {
   const last = lines.at(-1) ?? ''
   const match = last.match(/token=([A-Za-z0-9_-]+)/)
   return match?.[1] ?? null
+}
+
+/* The suite needs log-only mode to see the links it asserts on: with a real
+ * mailer configured the API (correctly) stops printing them, and those checks
+ * would fail for a reason that has nothing to do with the accounts code. */
+head('preflight')
+{
+  const st = await api('/api/auth/status')
+  check(st.json?.mailer === 'log-only', 'the suite runs in log-only mail mode', String(st.json?.mailer))
 }
 
 /* ------------------------------------------------------------- 1. signup -- */

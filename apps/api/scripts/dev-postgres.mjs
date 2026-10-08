@@ -34,6 +34,43 @@ const memory = argv.includes('--memory')
 const dataDir = String(flag('data', join(root, '.pgdata')))
 const dbName = String(flag('db', 'reachmark'))
 
+/**
+ * A Postgres data directory is not just files. It contains a dozen *empty*
+ * directories that Postgres expects to find and will refuse to start without —
+ * "FATAL: could not open directory \"pg_notify\"" and nothing more.
+ *
+ * Any tool that copies a tree without materialising empty directories silently
+ * destroys one: zip archives, `git`, `docker COPY`, `rsync` without `-a`, and
+ * the snapshot/restore this dev checkout lives in. Recreating them is cheap,
+ * idempotent and turns an inscrutable WASM crash into a working database — the
+ * alternative is an afternoon spent suspecting the data is corrupt when in fact
+ * it is intact and merely missing its scaffolding.
+ */
+const EMPTY_DIRS = [
+  'pg_commit_ts', 'pg_dynshmem', 'pg_notify', 'pg_replslot', 'pg_serial',
+  'pg_snapshots', 'pg_stat', 'pg_stat_tmp', 'pg_tblspc', 'pg_twophase',
+  'pg_wal/archive_status', 'pg_wal/summaries',
+  'pg_logical/mappings', 'pg_logical/snapshots',
+]
+
+function repairLayout(dir) {
+  // Only meaningful for an existing cluster. On a fresh directory PGlite runs
+  // initdb, which creates all of this itself.
+  if (!existsSync(join(dir, 'PG_VERSION'))) return []
+  const restored = []
+  for (const rel of EMPTY_DIRS) {
+    const full = join(dir, rel)
+    if (!existsSync(full)) {
+      mkdirSync(full, { recursive: true })
+      restored.push(rel)
+    }
+  }
+  if (restored.length) {
+    console.log(`[pg] restored ${restored.length} missing data-directory path(s): ${restored.join(', ')}`)
+  }
+  return restored
+}
+
 // Read DATABASE_URL so the script can tell the operator exactly what to use.
 let url = process.env.DATABASE_URL ?? ''
 if (!url && existsSync(join(root, '.env'))) {
@@ -46,7 +83,10 @@ const [{ PGlite }, { PGLiteSocketServer }] = await Promise.all([
   import('@electric-sql/pglite-socket'),
 ])
 
-if (!memory) mkdirSync(dataDir, { recursive: true })
+if (!memory) {
+  mkdirSync(dataDir, { recursive: true })
+  repairLayout(dataDir)
+}
 
 const db = memory ? new PGlite() : new PGlite(dataDir)
 await db.waitReady

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Reachmark Logs — transactional mail</title>
+</head>
+<body style="margin:0;background:#080b14;color:#e8ecf6;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;">
+  <div style="max-width:760px;margin:0 auto;padding:40px 22px 60px;">
+    <div style="font-size:22px;font-weight:700;letter-spacing:-0.3px;">Reachmark<span style="color:#7c5cff;">Logs</span> <span style="font-weight:400;color:#7c869d;">· transactional mail</span></div>
+    <p style="margin:10px 0 6px;color:#aab4c9;font-size:14px;line-height:22px;">
+      Rendered from <code style="color:#22d3ee;">apps/api/src/services/mailTemplates.js</code> — the same functions the API calls when it sends.
+      Every link below is a placeholder.
+    </p>
+    <p style="margin:0 0 32px;color:#7c869d;font-size:12px;">
+      Regenerate with <code>npm run mail:preview</code>. Layout is table-based with inline styles only, so it survives
+      Outlook, Gmail and dark-mode inversion; each message ships a real <code>text/plain</code> part, shown under each preview.
+    </p>
+    <div style="height:1px;background:#1c2338;margin:0 0 32px;"></div>
+    
+  <section style="margin:0 0 34px;">
+    <header style="display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;margin:0 0 10px;padding:0 2px;">
+      <code style="font-size:12px;color:#22d3ee;background:#101728;border:1px solid #232a41;border-radius:6px;padding:3px 8px;">verify</code>
+      <strong style="font-size:14px;color:#e8ecf6;">Confirm your Reachmark Logs account</strong>
+      <span style="font-size:12px;color:#7c869d;">on signup, and on “resend verification”</span>
+    </header>
+    <!-- The email's own body, inline styles intact. -->
+    <div style="border:1px solid #232a41;border-radius:14px;overflow:hidden;">
+  <!-- Shown next to the subject line in most inboxes; hidden in the body. -->
+  <div style="display:none;font-size:1px;color:#0b0e17;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">One tap to confirm Ada&#39;s email and start selling.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b0e17;padding:32px 16px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#141929;border:1px solid #252c42;border-radius:16px;">
+        <tr><td style="padding:28px 30px 8px;">
+          <div style="font-size:17px;font-weight:700;color:#ffffff;letter-spacing:-0.2px;">
+            Reachmark<span style="color:#7c5cff;">Logs</span>
+          </div>
+          <div style="margin-top:4px;font-size:12px;color:#8b95ad;letter-spacing:0.3px;text-transform:uppercase;">Escrow-protected digital logs</div>
+        </td></tr>
+        <tr><td style="padding:18px 30px 30px;">
+          <h1 style="margin:6px 0 14px;font-size:22px;line-height:30px;color:#ffffff;font-weight:700;">Confirm your email</h1>
+          <p style="margin:0 0 14px;color:#c8cfe0;font-size:15px;line-height:23px;">Welcome aboard, Ada.</p>
+          <p style="margin:0 0 14px;color:#c8cfe0;font-size:15px;line-height:23px;">Confirm this address to unlock listing, buying and payouts. Accounts that stay unconfirmed can browse, but cannot trade.</p><p style="margin:0 0 14px;color:#c8cfe0;font-size:15px;line-height:23px;">This link can only be used once.</p>
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:26px 0 8px;">
+        <tr><td align="center" bgcolor="#7c5cff" style="border-radius:10px;">
+          <a href="https://reachmarklogs.example/auth/verify?token=SAMPLE-token-not-real" style="display:inline-block;padding:13px 26px;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:10px;">Confirm email address</a>
+        </td></tr>
+      </table>
+      <p style="margin:0 0 18px;color:#8b95ad;font-size:12px;line-height:19px;word-break:break-all;">Button not working? Paste this into your browser:<br /><a href="https://reachmarklogs.example/auth/verify?token=SAMPLE-token-not-real" style="color:#22d3ee;text-decoration:none;">https://reachmarklogs.example/auth/verify?token=SAMPLE-token-not-real</a></p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:22px 0 0;border-top:1px solid #252c42;">
+        <tr><td style="padding-top:16px;color:#8b95ad;font-size:13px;line-height:20px;">The link expires in 1 hour. If you did not create a Reachmark Logs account, ignore this message — nothing was activated.</td></tr>
+      </table>
+        </td></tr>
+        <tr><td style="padding:18px 30px 26px;border-top:1px solid #252c42;color:#8b95ad;font-size:12px;line-height:19px;">
+          You are receiving this because someone used this address at Reachmark Logs.
+        </td></tr>
+      </table>
+      <div style="max-width:560px;margin:14px auto 0;color:#8b95ad;font-size:11px;line-height:17px;text-align:center;">
+        Reachmark Logs · escrow-protected marketplace for digital logs
+      </div>
+    </td></tr>
+  </table>
+</div>
+    <details style="margin:10px 2px 0;">
+      <summary style="cursor:pointer;font-size:12px;color:#7c869d;">text/plain alternative, as the recipient’s client sees it</summary>
+      <pre style="margin:8px 0 0;padding:12px 14px;background:#0d1220;border:1px solid #1c2338;border-radius:10px;color:#aab4c9;font-size:12px;line-height:18px;white-space:pre-wrap;word-break:break-word;">Welcome to Reachmark Logs, Ada.
+
+Confirm your email to unlock selling and payouts:
+https://reachmarklogs.example/auth/verify?token=SAMPLE-token-not-real
+
+This link can only be used once and expires in 1 hour.
+
+If you did not create an account, ignore this message — nothing was activated.
+</pre>
+    </details>
+  </section>
+
+  <section style="margin:0 0 34px;">
+    <header style="display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;margin:0 0 10px;padding:0 2px;">
+      <code style="font-size:12px;color:#22d3ee;background:#101728;border:1px solid #232a41;border-radius:6px;padding:3px 8px;">reset</code>
+      <strong style="font-size:14px;color:#e8ecf6;">Reset your Reachmark Logs password</strong>
+      <span style="font-size:12px;color:#7c869d;">on “forgot password”</span>
+    </header>
+    <!-- The email's own body, inline styles intact. -->
+    <div style="border:1px solid #232a41;border-radius:14px;overflow:hidden;">
+  <!-- Shown next to the subject line in most inboxes; hidden in the body. -->
+  <div style="display:none;font-size:1px;color:#0b0e17;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">A single-use link to set a new password. Expires shortly.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b0e17;padding:32px 16px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#141929;border:1px solid #252c42;border-radius:16px;">
+        <tr><td style="padding:28px 30px 8px;">
+          <div style="font-size:17px;font-weight:700;color:#ffffff;letter-spacing:-0.2px;">
+            Reachmark<span style="color:#7c5cff;">Logs</span>
+          </div>
+          <div style="margin-top:4px;font-size:12px;color:#8b95ad;letter-spacing:0.3px;text-transform:uppercase;">Escrow-protected digital logs</div>
+        </td></tr>
+        <tr><td style="padding:18px 30px 30px;">
+          <h1 style="margin:6px 0 14px;font-size:22px;line-height:30px;color:#ffffff;font-weight:700;">Set a new password</h1>
+          <p style="margin:0 0 14px;color:#c8cfe0;font-size:15px;line-height:23px;">Hi Ada — someone asked to reset the password on this account.</p>
+          <p style="margin:0 0 14px;color:#c8cfe0;font-size:15px;line-height:23px;">Choose a new one with the link below. For safety, using it signs out every device that is currently signed in.</p>
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:26px 0 8px;">
+        <tr><td align="center" bgcolor="#7c5cff" style="border-radius:10px;">
+          <a href="https://reachmarklogs.example/auth/reset?token=SAMPLE-token-not-real" style="display:inline-block;padding:13px 26px;font-size:15px;font-weight:600;color:#ffffff;text-decoration:none;border-radius:10px;">Choose a new password</a>
+        </td></tr>
+      </table>
+      <p style="margin:0 0 18px;color:#8b95ad;font-size:12px;line-height:19px;word-break:break-all;">Button not working? Paste this into your browser:<br /><a href="https://reachmarklogs.example/auth/reset?token=SAMPLE-token-not-real" style="color:#22d3ee;text-decoration:none;">https://reachmarklogs.example/auth/reset?token=SAMPLE-token-not-real</a></p>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:22px 0 0;border-top:1px solid #252c42;">
+        <tr><td style="padding-top:16px;color:#8b95ad;font-size:13px;line-height:20px;">The link expires in 1 hour and works once. Requested from 102.89.34.19. If this was not you, no action is needed — your password has not changed, and you can ignore this message.</td></tr>
+      </table>
+        </td></tr>
+        <tr><td style="padding:18px 30px 26px;border-top:1px solid #252c42;color:#8b95ad;font-size:12px;line-height:19px;">
+          You are receiving this because someone used this address at Reachmark Logs.
+        </td></tr>
+      </table>
+      <div style="max-width:560px;margin:14px auto 0;color:#8b95ad;font-size:11px;line-height:17px;text-align:center;">
+        Reachmark Logs · escrow-protected marketplace for digital logs
+      </div>
+    </td></tr>
+  </table>
+</div>
+    <details style="margin:10px 2px 0;">
+      <summary style="cursor:pointer;font-size:12px;color:#7c869d;">text/plain alternative, as the recipient’s client sees it</summary>
+      <pre style="margin:8px 0 0;padding:12px 14px;background:#0d1220;border:1px solid #1c2338;border-radius:10px;color:#aab4c9;font-size:12px;line-height:18px;white-space:pre-wrap;word-break:break-word;">Hi Ada,
+
+Someone asked to reset the password on your Reachmark Logs account.
+
+Choose a new one here (single use, expires in 1 hour):
+https://reachmarklogs.example/auth/reset?token=SAMPLE-token-not-real
+
+Using this link signs out every device currently signed in.
+
+Requested from 102.89.34.19.
+If this was not you, no action is needed — your password has not changed.
+</pre>
+    </details>
+  </section>
+
+  <section style="margin:0 0 34px;">
+    <header style="display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;margin:0 0 10px;padding:0 2px;">
+      <code style="font-size:12px;color:#22d3ee;background:#101728;border:1px solid #232a41;border-radius:6px;padding:3px 8px;">changed</code>
+      <strong style="font-size:14px;color:#e8ecf6;">Your Reachmark Logs password was changed</strong>
+      <span style="font-size:12px;color:#7c869d;">after any password change, to the account owner</span>
+    </header>
+    <!-- The email's own body, inline styles intact. -->
+    <div style="border:1px solid #232a41;border-radius:14px;overflow:hidden;">
+  <!-- Shown next to the subject line in most inboxes; hidden in the body. -->
+  <div style="display:none;font-size:1px;color:#0b0e17;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">If this was you, nothing to do. If not, secure the account now.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b0e17;padding:32px 16px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#141929;border:1px solid #252c42;border-radius:16px;">
+        <tr><td style="padding:28px 30px 8px;">
+          <div style="font-size:17px;font-weight:700;color:#ffffff;letter-spacing:-0.2px;">
+            Reachmark<span style="color:#7c5cff;">Logs</span>
+          </div>
+          <div style="margin-top:4px;font-size:12px;color:#8b95ad;letter-spacing:0.3px;text-transform:uppercase;">Escrow-protected digital logs</div>
+        </td></tr>
+        <tr><td style="padding:18px 30px 30px;">
+          <h1 style="margin:6px 0 14px;font-size:22px;line-height:30px;color:#ffffff;font-weight:700;">Your password was changed</h1>
+          <p style="margin:0 0 14px;color:#c8cfe0;font-size:15px;line-height:23px;">Hi Ada — the password on your Reachmark Logs account was just changed.</p>
+          <p style="margin:0 0 14px;color:#c8cfe0;font-size:15px;line-height:23px;">When: <strong style="color:#ffffff;">Thu, 08 Oct 2026 16:06:00 GMT</strong><br />From: <strong style="color:#ffffff;">102.89.34.19</strong></p><p style="margin:0 0 14px;color:#c8cfe0;font-size:15px;line-height:23px;">Every device that was signed in has been signed out, so you will need the new password next time.</p>
+          
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:22px 0 0;border-top:1px solid #252c42;">
+        <tr><td style="padding-top:16px;color:#8b95ad;font-size:13px;line-height:20px;">If this was you, you can ignore this message. If it was not, reset the password immediately — that will also sign out whoever made this change.</td></tr>
+      </table>
+        </td></tr>
+        <tr><td style="padding:18px 30px 26px;border-top:1px solid #252c42;color:#8b95ad;font-size:12px;line-height:19px;">
+          You are receiving this because someone used this address at Reachmark Logs.
+        </td></tr>
+      </table>
+      <div style="max-width:560px;margin:14px auto 0;color:#8b95ad;font-size:11px;line-height:17px;text-align:center;">
+        Reachmark Logs · escrow-protected marketplace for digital logs
+      </div>
+    </td></tr>
+  </table>
+</div>
+    <details style="margin:10px 2px 0;">
+      <summary style="cursor:pointer;font-size:12px;color:#7c869d;">text/plain alternative, as the recipient’s client sees it</summary>
+      <pre style="margin:8px 0 0;padding:12px 14px;background:#0d1220;border:1px solid #1c2338;border-radius:10px;color:#aab4c9;font-size:12px;line-height:18px;white-space:pre-wrap;word-break:break-word;">Hi Ada,
+
+The password on your Reachmark Logs account was just changed.
+When: Thu, 08 Oct 2026 16:06:00 GMT
+From: 102.89.34.19
+
+Every device that was signed in has been signed out, so you will need the new password next time.
+
+If this was you, ignore this message. If it was not, reset your password immediately — that will also sign out whoever made this change.
+</pre>
+    </details>
+  </section>
+
+  <section style="margin:0 0 34px;">
+    <header style="display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;margin:0 0 10px;padding:0 2px;">
+      <code style="font-size:12px;color:#22d3ee;background:#101728;border:1px solid #232a41;border-radius:6px;padding:3px 8px;">notice</code>
+      <strong style="font-size:14px;color:#e8ecf6;">Your account was deactivated</strong>
+      <span style="font-size:12px;color:#7c869d;">account lifecycle notices</span>
+    </header>
+    <!-- The email's own body, inline styles intact. -->
+    <div style="border:1px solid #232a41;border-radius:14px;overflow:hidden;">
+  <!-- Shown next to the subject line in most inboxes; hidden in the body. -->
+  <div style="display:none;font-size:1px;color:#0b0e17;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">Your listings are hidden until you sign back in.</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b0e17;padding:32px 16px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#141929;border:1px solid #252c42;border-radius:16px;">
+        <tr><td style="padding:28px 30px 8px;">
+          <div style="font-size:17px;font-weight:700;color:#ffffff;letter-spacing:-0.2px;">
+            Reachmark<span style="color:#7c5cff;">Logs</span>
+          </div>
+          <div style="margin-top:4px;font-size:12px;color:#8b95ad;letter-spacing:0.3px;text-transform:uppercase;">Escrow-protected digital logs</div>
+        </td></tr>
+        <tr><td style="padding:18px 30px 30px;">
+          <h1 style="margin:6px 0 14px;font-size:22px;line-height:30px;color:#ffffff;font-weight:700;">Your account was deactivated</h1>
+          <p style="margin:0 0 14px;color:#c8cfe0;font-size:15px;line-height:23px;">Hi Ada — your Reachmark Logs account has been deactivated, as requested.</p>
+          <p style="margin:0 0 14px;color:#c8cfe0;font-size:15px;line-height:23px;">Your listings are hidden from the catalog and no new orders can be placed against them. Escrow on orders already in progress still settles normally — deactivating does not cancel a trade.</p><p style="margin:0 0 14px;color:#c8cfe0;font-size:15px;line-height:23px;">Signing in again restores the account exactly as you left it.</p>
+          
+          
+        </td></tr>
+        <tr><td style="padding:18px 30px 26px;border-top:1px solid #252c42;color:#8b95ad;font-size:12px;line-height:19px;">
+          You are receiving this because someone used this address at Reachmark Logs.
+        </td></tr>
+      </table>
+      <div style="max-width:560px;margin:14px auto 0;color:#8b95ad;font-size:11px;line-height:17px;text-align:center;">
+        Reachmark Logs · escrow-protected marketplace for digital logs
+      </div>
+    </td></tr>
+  </table>
+</div>
+    <details style="margin:10px 2px 0;">
+      <summary style="cursor:pointer;font-size:12px;color:#7c869d;">text/plain alternative, as the recipient’s client sees it</summary>
+      <pre style="margin:8px 0 0;padding:12px 14px;background:#0d1220;border:1px solid #1c2338;border-radius:10px;color:#aab4c9;font-size:12px;line-height:18px;white-space:pre-wrap;word-break:break-word;">Your account was deactivated
+
+Hi Ada — your Reachmark Logs account has been deactivated, as requested.
+
+Your listings are hidden from the catalog and no new orders can be placed against them. Escrow on orders already in progress still settles normally — deactivating does not cancel a trade.
+
+Signing in again restores the account exactly as you left it.
+</pre>
+    </details>
+  </section>
+  </div>
+</body>
+</html>

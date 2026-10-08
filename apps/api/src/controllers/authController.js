@@ -9,6 +9,7 @@
 import * as auth from '../services/authService.js'
 import prisma from '../configs/prisma.js'
 import { sendEmail, mailerConfigured } from '../configs/nodemailer.js'
+import { verifyEmailMail, passwordResetMail, passwordChangedMail } from '../services/mailTemplates.js'
 import { authMode, setSessionCookie, clearSessionCookie } from '../middlewares/authMiddleware.js'
 
 const meta = (req) => ({
@@ -27,6 +28,23 @@ const fail = (res, error) => {
 /** Where the client should send someone after clicking an emailed link. */
 const appUrl = (path, token) =>
   `${(process.env.APP_URL ?? 'http://localhost:5173').replace(/\/$/, '')}${path}?token=${encodeURIComponent(token)}`
+
+/* ------------------------------------------------------------------- mail -- */
+
+/**
+ * Mail must never be able to fail a signup. A Gmail outage, a rate limit, a
+ * revoked app password or a slow SMTP handshake should degrade to a logged
+ * error — not a 500 on a form the user has no other way to complete. The
+ * account still gets created, and "resend verification" is the recovery path.
+ */
+const mailSafely = async (payload, context) => {
+  try {
+    return await sendEmail(payload)
+  } catch (error) {
+    console.error(`[mail] ${context} → ${payload.to} failed:`, error.message)
+    return null
+  }
+}
 
 /* ------------------------------------------------------------------ status -- */
 
@@ -63,11 +81,7 @@ export const signup = async (req, res) => {
     // the flow is completable without a mail server. In production this is the
     // only trace of the token, and it lives in the recipient's inbox.
     if (!mailerConfigured()) console.log(`[auth] verify email → ${user.email}: ${verifyUrl}`)
-    await sendEmail({
-      to: user.email,
-      subject: 'Confirm your Reachmark Logs account',
-      text: `Welcome to Reachmark Logs.\n\nConfirm your email to unlock selling and payouts:\n${verifyUrl}\n\nThis link expires in 60 minutes.`,
-    })
+    await mailSafely({ to: user.email, ...verifyEmailMail({ name: user.name, url: verifyUrl }) }, 'verification')
 
     res.status(201).json({
       ok: true,
@@ -145,7 +159,7 @@ export const resendVerification = async (req, res) => {
     const verification = await auth.issueToken(user.id, 'verify_email')
     const url = appUrl('/auth/verify', verification.token)
     if (!mailerConfigured()) console.log(`[auth] resend verify → ${user.email}: ${url}`)
-    await sendEmail({ to: user.email, subject: 'Confirm your Reachmark Logs account', text: `Confirm your email:\n${url}` })
+    await mailSafely({ to: user.email, ...verifyEmailMail({ name: user.name, url }) }, 'verification resend')
     res.json({ ok: true, sentTo: user.email, devUrl: mailerConfigured() ? undefined : url })
   } catch (error) {
     fail(res, error)
@@ -161,11 +175,7 @@ export const forgotPassword = async (req, res) => {
     if (user && token) {
       devUrl = appUrl('/auth/reset', token.token)
       if (!mailerConfigured()) console.log(`[auth] password reset → ${user.email}: ${devUrl}`)
-      await sendEmail({
-        to: user.email,
-        subject: 'Reset your Reachmark Logs password',
-        text: `Someone asked to reset the password on this account.\n\n${devUrl}\n\nThe link expires in 60 minutes. If this was not you, ignore this email — nothing changes.`,
-      })
+      await mailSafely({ to: user.email, ...passwordResetMail({ name: user.name, url: devUrl, ip: meta(req).ip }) }, 'password reset')
     }
     // Identical response whether or not the address exists.
     res.json({ ok: true, message: 'If that address has an account, a reset link is on its way.', devUrl: mailerConfigured() ? undefined : devUrl })
@@ -178,6 +188,15 @@ export const resetPassword = async (req, res) => {
   try {
     const { user, token, expiresAt, sessionsRevoked } = await auth.resetPassword(req.body?.token, req.body?.password)
     setSessionCookie(res, token, expiresAt)
+
+    // The alarm that turns a silent account takeover into a loud one: a user who
+    // did not do this finds out immediately, from an address they trust, rather
+    // than when they next fail to sign in.
+    await mailSafely(
+      { to: user.email, ...passwordChangedMail({ name: user.name, when: new Date(), ip: meta(req).ip }) },
+      'password changed notice',
+    )
+
     res.json({ ok: true, user, token, expiresAt, sessionsRevoked, message: 'Password updated. Other devices were signed out.' })
   } catch (error) {
     fail(res, error)
@@ -193,6 +212,15 @@ export const changePassword = async (req, res) => {
     const header = req.get('authorization') ?? ''
     const current = /^bearer\s+/i.test(header) ? header.replace(/^bearer\s+/i, '').trim() : null
     const result = await auth.changePassword(req.userId, req.body?.currentPassword, req.body?.password, current)
+
+    const owner = await prisma.user.findUnique({ where: { id: req.userId }, select: { email: true, name: true } })
+    if (owner) {
+      await mailSafely(
+        { to: owner.email, ...passwordChangedMail({ name: owner.name, when: new Date(), ip: meta(req).ip }) },
+        'password changed notice',
+      )
+    }
+
     res.json({ ok: true, ...result, message: 'Password updated. Other devices were signed out.' })
   } catch (error) {
     fail(res, error)

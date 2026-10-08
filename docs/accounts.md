@@ -15,11 +15,63 @@ npm run dev                                     # web on :5173, proxies /api →
 node apps/api/server.js                         # API on :3000  (separate shell)
 ```
 
-Open <http://localhost:5173>. Sign up with any address you own; verification and reset links are
-printed to the API's stdout (`[auth] verify email → …`) because the default mailer is `log-only`.
+Open <http://localhost:5173>. Sign up with any address you own.
 
-Set `SMTP_USER` / `SMTP_PASS` in `apps/api/.env` and those same links are emailed instead. Nothing
-else changes: the mailer is the only integration point.
+**Mail works two ways, and the difference is visible in `/api/auth/status` as `mailer`:**
+
+| Mode | When | What happens to the link |
+| --- | --- | --- |
+| `log-only` | `SMTP_USER`/`SMTP_PASS` unset — a fresh clone, and CI | Printed to the API's stdout (`[auth] verify email → …`) and returned as `emailVerification.devUrl`, so the flow is completable with no mail account. |
+| `smtp` | both set | Really delivered, and **neither** the log line nor the `devUrl` appears — the token exists only in the recipient's inbox. That is the point of configuring it. |
+
+Configure Gmail with an **app password**, not the account password:
+
+```bash
+# 1. Turn on 2-step verification, then create an app password:
+#    https://myaccount.google.com/apppasswords
+# 2. Put it in apps/api/.env (gitignored):
+SMTP_USER=you@gmail.com
+SMTP_PASS=abcd efgh ijkl mnop     # spaces are fine — they are stripped for you
+
+# 3. Prove it before trusting it:
+npm run mail:verify --workspace apps/api                          # authenticate only
+npm run mail:verify --workspace apps/api -- --to you@example.com  # …and deliver one
+```
+
+`mail:verify` reports the failure modes that otherwise surface three screens into a signup form: `535`
+is a wrong or revoked app password, `534` means the account is still expecting the account password
+because 2-step verification is off. Each delivered message logs one line —
+`[mail] sent → … · 250 2.0.0 OK …` — because "did that signup mail actually go out?" is the first
+question anyone asks when a user says they never received it.
+
+For a provider other than Gmail, change `SMTP_HOST`/`SMTP_PORT`/`SMTP_SECURE`; nothing else moves.
+`SENDER_EMAIL` must be the mailbox you authenticate as, or Gmail rewrites the header.
+
+**`APP_URL` is what lands in the user's inbox.** Left at `localhost` in production, every real user
+gets a mail pointing at their own machine.
+
+#### What gets sent
+
+Four messages, all rendered from `apps/api/src/services/mailTemplates.js` — table layout, inline
+styles only, dark-mode-safe, each with a real `text/plain` alternative:
+
+| Message | Trigger |
+| --- | --- |
+| Confirm your email | signup, and “resend verification” |
+| Reset your password | “forgot password” |
+| **Your password was changed** | any password change — reset *or* change-password, to the owner |
+| Account notices | lifecycle events |
+
+The password-changed notice is the one worth keeping: it turns a silent account takeover into a loud
+one, because a user who did not do it finds out immediately from an address they trust rather than
+when they next fail to sign in.
+
+`npm run mail:preview --workspace apps/api` renders all four to `docs/mail-preview.html`, built from
+the same templates the API sends, so a reviewed file cannot drift from production behaviour.
+
+Mail is also **non-fatal by design**: a Gmail outage, a rate limit or a revoked password logs
+`[mail] … failed: …` and lets signup succeed. An account that exists with no mail is a recoverable
+state; a 500 on the signup form is not, and "resend verification" is the way back.
 
 ### Seeded logins
 
@@ -62,6 +114,12 @@ calls same-origin `/api`. No CORS, no second deploy target, no client/server ver
 | `LOCKOUT_MINUTES` | `15` | Lockout length. |
 | `SESSION_COOKIE_NAME` | `reachmark_session` | httpOnly cookie name. |
 | `APP_URL` | `http://localhost:5173` | Base for the links in verification / reset mail. **Set this to the public origin in production** — it is what lands in the user's inbox. |
+| `SMTP_HOST` / `SMTP_PORT` / `SMTP_SECURE` | `smtp.gmail.com` / `465` / `true` | Provider. 465 is implicit TLS, 587 upgrades — derived from the port unless `SMTP_SECURE` says otherwise. |
+| `SMTP_USER` / `SMTP_PASS` | – | Both set ⇒ `mailer: smtp`. An app password; spaces are stripped. |
+| `SENDER_EMAIL` / `MAIL_FROM` | `SMTP_USER` | From header. Must be the authenticated mailbox. |
+| `SUPPORT_EMAIL` | – | Reply-To on every message. |
+| `MAIL_LOG` | – | `quiet` stops the one-line-per-message delivery log. |
+| `ADMIN_EMAILS` | `ops@reachmarklogs.test` | Comma-separated. These addresses reach `/admin` regardless of the role on the account. |
 | `PG_POOL_MAX` | `1` | Keep at 1 against the embedded dev Postgres, which serves a single connection. |
 
 ## What the security model actually is
@@ -92,10 +150,17 @@ npm run test:api        # the three suites below
 npm run test:web        # the route smoke test
 
 npm run test:e2e      --workspace apps/api   # 102 checks — catalog, escrow, ops, auth gates, sign-out
-npm run test:auth     --workspace apps/api   #  76 checks — signup, sessions, throttling, hashes at rest
+npm run test:auth     --workspace apps/api   #  77 checks — signup, sessions, throttling, hashes at rest
 npm run test:copilot  --workspace apps/api   #  36 checks — listing-copilot parity
 npm run smoke         --workspace apps/web   #  20 routes render clean
 ```
+
+The auth suite **blanks `SMTP_USER`/`SMTP_PASS` for the API it spawns**, and asserts
+`mailer: log-only` in a preflight check. That is not incidental: it reads the single-use links out of
+the API's log, which the API only prints when no mailer is configured. Inheriting real credentials
+would mail every fixture address and lose the tokens the suite asserts on. **A test must not depend on
+whose inbox happens to be wired up**, and the preflight makes that dependency fail loudly rather than
+mysteriously.
 
 The suites sign in as real seeded accounts and create real rows, so they clean up after themselves:
 e2e signs both accounts back out (and asserts the tokens are dead), and the auth suite deletes every

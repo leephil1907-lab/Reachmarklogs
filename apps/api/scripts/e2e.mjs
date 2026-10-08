@@ -18,6 +18,7 @@
 import { spawn } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
+import { withoutMailer } from './support/env.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const apiRoot = resolve(here, '..')
@@ -78,7 +79,7 @@ if (!process.env.API_ORIGIN) {
   console.log(`\x1b[2mstarting api on :${PORT} …\x1b[0m`)
   child = spawn(process.execPath, ['server.js'], {
     cwd: apiRoot,
-    env: { ...process.env, PORT: String(PORT), NODE_ENV: 'test' },
+    env: { ...process.env, ...withoutMailer, PORT: String(PORT), NODE_ENV: 'test' },
     stdio: ['ignore', 'pipe', 'pipe'],
   })
   let boot = ''
@@ -353,7 +354,7 @@ head('database transport selection')
   const probe = (env) => {
     const r = spawnSync(process.execPath, ['-e', "import('./src/configs/prisma.js').then(() => process.exit(0))"], {
       cwd: apiRoot,
-      env: { ...process.env, ...env },
+      env: { ...process.env, ...withoutMailer, ...env },
       encoding: 'utf8',
       timeout: 25_000,
     })
